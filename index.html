@@ -2,315 +2,225 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LaunchOS Enterprise | Founder's Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandForge Pro | Ultimate Founder Suite</title>
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&family=Playfair+Display:wght@600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- THEME SYSTEM --- */
+        /* --- DESIGN TOKENS --- */
         :root {
-            --bg-body: #09090b;
-            --bg-panel: #18181b;
-            --bg-surface: #27272a;
-            --border: #3f3f46;
-            --primary: #6366f1;
+            --bg-app: #0f172a;       /* Slate 950 */
+            --bg-panel: #1e293b;     /* Slate 900 */
+            --bg-canvas: #334155;    /* Slate 700 */
+            --border: #334155;
+            --primary: #6366f1;      /* Indigo 500 */
             --primary-hover: #4f46e5;
-            --text-main: #fafafa;
-            --text-muted: #a1a1aa;
-            --danger: #ef4444;
-            --success: #10b981;
-            --radius-md: 8px;
-            --radius-lg: 16px;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 6px;
             --font-ui: 'Inter', sans-serif;
-            --sidebar-w: 260px;
         }
 
-        /* --- GLOBAL RESET --- */
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg-body); color: var(--text-main); font-family: var(--font-ui); height: 100vh; overflow: hidden; display: flex; flex-direction: row; }
+        /* --- RESET --- */
+        * { box-sizing: border-box; outline: none; }
+        body { margin: 0; background: var(--bg-app); color: var(--text-main); font-family: var(--font-ui); height: 100vh; display: flex; overflow: hidden; }
         
-        /* --- LAYOUT & RESPONSIVENESS --- */
-        aside { 
-            width: var(--sidebar-w); background: var(--bg-panel); border-right: 1px solid var(--border); 
-            display: flex; flex-direction: column; z-index: 50; flex-shrink: 0; transition: transform 0.3s;
+        /* --- LAYOUT --- */
+        .app-shell { display: flex; width: 100%; height: 100%; }
+        
+        /* SIDEBAR (Navigation) */
+        aside { width: 260px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 20; flex-shrink: 0; }
+        .brand-header { padding: 20px; font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .nav-links { padding: 10px; flex: 1; overflow-y: auto; }
+        .nav-btn {
+            display: flex; align-items: center; gap: 12px; padding: 12px; width: 100%; text-align: left;
+            background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-radius: var(--radius);
+            margin-bottom: 4px; font-weight: 500; transition: 0.2s;
         }
-        main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; background: var(--bg-body); }
-        
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            aside { 
-                width: 100%; height: auto; border-right: none; border-top: 1px solid var(--border); 
-                order: 2; flex-direction: row; padding: 10px; overflow-x: auto; justify-content: space-around;
-            }
-            main { order: 1; height: calc(100vh - 70px); }
-            .brand-area { display: none !important; }
-            .nav-item span { display: none; }
-            .nav-item { padding: 10px; justify-content: center; }
-            .nav-item i { font-size: 1.5rem; margin: 0; }
-        }
+        .nav-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-btn.active { background: var(--primary); color: white; }
 
-        /* --- SIDEBAR COMPONENTS --- */
-        .brand-area { padding: 20px; font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: white; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
-        .nav-list { flex: 1; padding: 10px; overflow-y: auto; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-md);
-            color: var(--text-muted); cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.9rem; margin-bottom: 4px;
-        }
-        .nav-item:hover { background: var(--bg-surface); color: white; }
-        .nav-item.active { background: var(--primary); color: white; }
-        .nav-item i { font-size: 1.2rem; }
+        /* MAIN AREA */
+        main { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .view { display: none; padding: 40px; overflow-y: auto; height: 100%; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .view.active { display: block; }
 
-        /* --- VIEW CONTAINER --- */
-        .view-section { display: none; padding: 30px; overflow-y: auto; height: 100%; max-width: 1400px; margin: 0 auto; width: 100%; animation: fadeIn 0.3s ease; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- UI ELEMENTS --- */
-        h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; margin: 0 0 10px 0; }
-        p.sub { color: var(--text-muted); margin-bottom: 30px; max-width: 600px; line-height: 1.5; }
+        /* --- COMPONENT STYLES --- */
+        .card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        .card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        
+        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
         input, select, textarea {
-            width: 100%; background: var(--bg-surface); border: 1px solid var(--border); color: white;
-            padding: 12px; border-radius: var(--radius-md); font-size: 1rem; margin-top: 8px; font-family: var(--font-ui);
+            width: 100%; background: var(--bg-app); border: 1px solid var(--border); color: white;
+            padding: 10px; border-radius: var(--radius); font-size: 0.95rem; font-family: var(--font-ui);
         }
-        label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        input:focus { border-color: var(--primary); }
         
-        .btn {
-            background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: var(--radius-md);
-            font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem;
-        }
-        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); }
-        .btn-outline:hover { border-color: var(--text-muted); background: var(--bg-surface); }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:hover { background: var(--primary-hover); }
 
-        /* --- 1. NAMING MODULE --- */
+        /* --- NAME GENERATOR --- */
         .name-card {
-            background: var(--bg-surface); border: 1px solid var(--border); padding: 15px; border-radius: var(--radius-md);
-            cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 15px; border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
         }
-        .name-card:hover { border-color: var(--primary); }
-        .name-card.selected { background: rgba(99, 102, 241, 0.2); border-color: var(--primary); }
-        .name-main { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; }
-        .domain-tag { font-size: 0.75rem; background: #064e3b; color: #34d399; padding: 4px 8px; border-radius: 99px; }
+        .name-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .name-card.selected { border: 2px solid var(--primary); background: rgba(99, 102, 241, 0.2); }
+        .name-main { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; }
 
-        /* --- 2. STRATEGY MODULE --- */
-        .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .swot-box { padding: 20px; border-radius: var(--radius-md); border-left: 4px solid; background: var(--bg-surface); }
-        .swot-box h3 { margin: 0 0 10px 0; font-size: 1rem; opacity: 0.9; }
-        .swot-list { padding-left: 20px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
-
-        /* --- 3. BUILDER MODULE (Complex) --- */
-        .builder-layout { display: flex; height: 100%; border-top: 1px solid var(--border); }
+        /* --- BUILDER UI (Figma/Webflow Style) --- */
+        .builder-container { display: flex; width: 100%; height: 100%; background: #0f172a; }
         
-        .b-sidebar { width: 280px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .b-header { padding: 15px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 0.9rem; display: flex; justify-content: space-between; }
-        .b-content { padding: 15px; overflow-y: auto; flex: 1; }
-
-        .block-item { 
-            padding: 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; 
-            margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
+        /* Builder Toolbar (Top) */
+        .b-toolbar {
+            height: 50px; border-bottom: 1px solid var(--border); background: var(--bg-panel); 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px; width: 100%;
         }
-        .block-item:hover { border-color: var(--primary); color: white; }
 
-        .b-canvas-area { flex: 1; background: #09090b; display: flex; flex-direction: column; overflow: hidden; }
-        .b-toolbar { height: 50px; background: var(--bg-panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 15px; padding: 0 20px; }
-        
-        .device-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; padding: 8px; border-radius: 6px; }
-        .device-btn.active { color: var(--primary); background: rgba(99, 102, 241, 0.1); }
-
-        .b-viewport { flex: 1; overflow-y: auto; padding: 40px 20px; display: flex; justify-content: center; background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px; }
-        
-        /* The Canvas Frame */
-        .canvas-frame {
-            background: white; color: #111; transition: width 0.3s; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            min-height: 800px; position: relative; overflow: hidden;
+        /* Builder Sidebar (Left - Add Blocks) */
+        .b-sidebar-left { width: 240px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .block-btn {
+            padding: 10px; margin: 5px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #cbd5e1;
         }
-        .canvas-frame.desktop { width: 100%; max-width: 1200px; border-radius: 4px; }
-        .canvas-frame.mobile { width: 375px; border-radius: 30px; border: 8px solid #333; }
+        .block-btn:hover { background: rgba(255,255,255,0.08); color: white; border-color: var(--text-muted); }
 
-        /* Editable Blocks */
-        .web-block { position: relative; border: 2px solid transparent; transition: 0.2s; }
-        .web-block:hover { border-color: var(--primary); }
-        .block-actions { 
+        /* Builder Canvas (Center) */
+        .b-canvas-wrapper { flex: 1; background: #334155; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        .b-viewport { flex: 1; overflow-y: auto; padding: 40px; display: flex; justify-content: center; }
+        
+        /* The Website Frame */
+        .website-frame {
+            background: white; width: 100%; max-width: 1200px; min-height: 800px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); transition: width 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .website-frame.mobile { max-width: 375px; }
+
+        /* Builder Inspector (Right - Settings) */
+        .b-sidebar-right { width: 280px; background: var(--bg-panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+        .prop-group { padding: 15px; border-bottom: 1px solid var(--border); }
+        .prop-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+
+        /* --- EDITABLE BLOCKS --- */
+        .w-section { position: relative; border: 2px solid transparent; transition: 0.2s; }
+        .w-section:hover { border-color: var(--primary); }
+        .w-section.selected { border-color: #22d3ee; } /* Cyan selection */
+        
+        /* Edit Handles */
+        .w-handles { 
             position: absolute; top: 0; right: 0; background: var(--primary); color: white; 
-            display: none; border-radius: 0 0 0 6px; z-index: 10;
+            display: none; padding: 4px; z-index: 10; font-size: 12px; gap: 5px;
         }
-        .block-actions button { background: none; border: none; color: white; padding: 5px 8px; cursor: pointer; }
-        .block-actions button:hover { background: rgba(0,0,0,0.1); }
-        .web-block:hover .block-actions { display: flex; }
+        .w-section:hover .w-handles { display: flex; }
+        .handle-btn { cursor: pointer; padding: 2px 6px; background: rgba(0,0,0,0.2); border-radius: 4px; }
 
-        /* Content Editable Styles */
-        [contenteditable]:focus { outline: 2px solid var(--primary); border-radius: 2px; }
-        [contenteditable]:empty:before { content: attr(placeholder); color: #999; display: block; }
-        
-        /* Image Upload */
-        .img-placeholder { cursor: pointer; transition: 0.2s; display: block; }
-        .img-placeholder:hover { opacity: 0.8; outline: 2px dashed var(--primary); }
-        
-        /* Hidden File Input */
-        #hidden-file-input { display: none; }
+        /* Content Editable */
+        [contenteditable]:focus { outline: 2px solid var(--primary); background: rgba(99,102,241,0.1); }
+        [contenteditable]:empty:before { content: attr(placeholder); color: #aaa; }
 
-        @media (max-width: 768px) {
-            .builder-layout { flex-direction: column; }
-            .b-sidebar { width: 100%; height: 200px; order: 2; }
-            .b-canvas-area { height: 500px; order: 1; }
-            .b-viewport { padding: 10px; }
-        }
     </style>
 </head>
 <body>
 
-    <input type="file" id="hidden-file-input" accept="image/*">
+<input type="file" id="img-uploader" accept="image/*" style="display:none;">
 
+<div class="app-shell">
+    
     <aside>
-        <div class="brand-area">
-            <i class="ph-fill ph-planet"></i> LaunchOS
-        </div>
-        <div class="nav-list">
-            <div class="nav-item active" onclick="App.route('profile')"><i class="ph ph-user-circle"></i> Profile</div>
-            <div class="nav-item" onclick="App.route('branding')"><i class="ph ph-sparkle"></i> Branding</div>
-            <div class="nav-item" onclick="App.route('strategy')"><i class="ph ph-chart-line-up"></i> Strategy</div>
-            <div class="nav-item" onclick="App.route('builder')"><i class="ph ph-desktop"></i> Builder</div>
+        <div class="brand-header"><i class="ph-fill ph-fire"></i> BrandForge</div>
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="App.route('profile')"><i class="ph ph-user"></i> Profile</button>
+            <button class="nav-btn" onclick="App.route('names')"><i class="ph ph-tag"></i> Branding</button>
+            <button class="nav-btn" onclick="App.route('builder')"><i class="ph ph-desktop"></i> Site Builder</button>
         </div>
     </aside>
 
     <main>
         
-        <div id="view-profile" class="view-section active">
-            <h1>Project Profile</h1>
-            <p class="sub">Initialize your business DNA. This data powers the AI generators.</p>
+        <div id="view-profile" class="view active">
+            <h1>Business DNA</h1>
+            <p style="color:var(--text-muted); margin-bottom:30px;">Define your business to power the semantic engines.</p>
             
-            <div class="card" style="max-width: 800px;">
+            <div class="card" style="max-width:800px;">
                 <div class="grid-2">
                     <div>
-                        <label>Business Sector</label>
+                        <label>Industry</label>
                         <select id="inp-industry">
-                            <option value="tech">Technology / SaaS / App</option>
-                            <option value="food">Food & Beverage / Restaurant</option>
-                            <option value="fashion">Fashion / Retail / E-commerce</option>
-                            <option value="service">Agency / Consulting / Freelance</option>
+                            <option value="food">Food & Beverage</option>
+                            <option value="tech">Technology / SaaS</option>
+                            <option value="fashion">Fashion & Lifestyle</option>
+                            <option value="health">Health & Wellness</option>
                         </select>
                     </div>
                     <div>
                         <label>Primary Keyword</label>
-                        <input type="text" id="inp-keyword" placeholder="e.g. Brownie, CRM, Sneaker">
+                        <input type="text" id="inp-keyword" placeholder="e.g. Brownie, Code, Silk">
                     </div>
                 </div>
                 <br>
                 <label>Business Description</label>
-                <textarea id="inp-desc" rows="3" placeholder="Describe your product and unique value..."></textarea>
+                <textarea id="inp-desc" rows="4" placeholder="e.g. Traditional kelveragu brownies with a modern twist..."></textarea>
                 <br>
                 <button class="btn" onclick="App.saveProfile()">Save & Continue <i class="ph ph-arrow-right"></i></button>
             </div>
         </div>
 
-        <div id="view-branding" class="view-section">
-            <h1>Identity Studio</h1>
-            <p class="sub">Generate industry-standard, phonetically balanced brand names.</p>
+        <div id="view-names" class="view">
+            <h1>Semantic Naming</h1>
+            <p style="color:var(--text-muted); margin-bottom:30px;">Generates unique, meaning-based names, not just random combinations.</p>
             
             <div class="card">
-                <div class="grid-2" style="align-items: end;">
+                <div class="grid-2" style="align-items:end; margin-bottom:20px;">
                     <div>
-                        <label>Name Style</label>
-                        <select id="inp-namestyle">
-                            <option value="modern">Modern & Abstract (e.g., Vercel)</option>
-                            <option value="compound">Compound (e.g., FaceBook)</option>
-                            <option value="classic">Classic & Rooted (e.g., Solura)</option>
+                        <label>Vibe</label>
+                        <select id="inp-vibe">
+                            <option value="premium">Premium & Luxury</option>
+                            <option value="modern">Modern & Minimal</option>
+                            <option value="friendly">Friendly & Warm</option>
                         </select>
                     </div>
-                    <button class="btn btn-outline" onclick="Modules.Branding.generate()">Generate Names</button>
+                    <button class="btn" onclick="Modules.Branding.generate()">Generate Names</button>
                 </div>
-                <div id="name-grid" class="grid-2" style="margin-top: 20px;"></div>
-            </div>
-            
-            <div class="card" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong>Active Brand: <span id="active-brand-display" style="font-size: 1.2rem;">Pending...</span></strong>
-                    <button class="btn" onclick="App.route('strategy')">Confirm & Next</button>
-                </div>
+                <div id="name-grid" class="grid-2"></div>
             </div>
         </div>
 
-        <div id="view-strategy" class="view-section">
-            <h1>Strategic Intelligence</h1>
-            <p class="sub">Deep analysis generated based on your profile.</p>
-            
-            <div class="card">
-                <button class="btn" onclick="Modules.Strategy.run()">Run Analysis Engine</button>
-                <div id="strategy-output" style="display: none; margin-top: 20px;">
-                    
-                    <h3>SWOT Analysis</h3>
-                    <div class="swot-grid">
-                        <div class="swot-box" style="border-color: #10b981;">
-                            <h3 style="color:#10b981">Strengths</h3>
-                            <div id="swot-s" class="swot-list"></div>
-                        </div>
-                        <div class="swot-box" style="border-color: #f59e0b;">
-                            <h3 style="color:#f59e0b">Weaknesses</h3>
-                            <div id="swot-w" class="swot-list"></div>
-                        </div>
-                        <div class="swot-box" style="border-color: #3b82f6;">
-                            <h3 style="color:#3b82f6">Opportunities</h3>
-                            <div id="swot-o" class="swot-list"></div>
-                        </div>
-                        <div class="swot-box" style="border-color: #ef4444;">
-                            <h3 style="color:#ef4444">Threats</h3>
-                            <div id="swot-t" class="swot-list"></div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 30px;">
-                        <h3>Marketing Ideas</h3>
-                        <div class="card" id="marketing-ideas" style="background: var(--bg-surface);"></div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="view-builder" class="view-section" style="padding: 0; max-width: 100%;">
-            <div class="builder-layout">
+        <div id="view-builder" style="display:none; height:100%; width:100%; padding:0; background:#0f172a;">
+            <div class="builder-container">
                 
-                <div class="b-sidebar">
-                    <div class="b-header">Add Blocks</div>
-                    <div class="b-content">
-                        <div class="block-item" onclick="Modules.Builder.add('hero')"><i class="ph ph-image"></i> Hero Section</div>
-                        <div class="block-item" onclick="Modules.Builder.add('features')"><i class="ph ph-squares-four"></i> Features Grid</div>
-                        <div class="block-item" onclick="Modules.Builder.add('gallery')"><i class="ph ph-images"></i> Image Gallery</div>
-                        <div class="block-item" onclick="Modules.Builder.add('text')"><i class="ph ph-text-t"></i> Rich Text</div>
-                        <div class="block-item" onclick="Modules.Builder.add('cta')"><i class="ph ph-megaphone"></i> Call to Action</div>
-                        <div class="block-item" onclick="Modules.Builder.add('footer')"><i class="ph ph-layout"></i> Footer</div>
-                    </div>
-                    
-                    <div class="b-header" style="border-top:1px solid var(--border)">Theme Settings</div>
-                    <div class="b-content">
-                        <label>Primary Color</label>
-                        <input type="color" id="theme-color" value="#6366f1" oninput="Modules.Builder.updateTheme()">
-                        <br><br>
-                        <label>Font Family</label>
-                        <select id="theme-font" onchange="Modules.Builder.updateTheme()">
-                            <option value="Inter, sans-serif">Inter (Clean)</option>
-                            <option value="'Playfair Display', serif">Playfair (Luxury)</option>
-                            <option value="'Space Grotesk', sans-serif">Space (Tech)</option>
-                        </select>
+                <div class="b-sidebar-left">
+                    <div style="padding:15px; font-weight:700; border-bottom:1px solid var(--border);">Components</div>
+                    <div style="padding:10px; overflow-y:auto;">
+                        <div class="block-btn" onclick="Modules.Builder.add('hero')"><i class="ph ph-image"></i> Hero Header</div>
+                        <div class="block-btn" onclick="Modules.Builder.add('features')"><i class="ph ph-squares-four"></i> Features</div>
+                        <div class="block-btn" onclick="Modules.Builder.add('gallery')"><i class="ph ph-images"></i> Gallery</div>
+                        <div class="block-btn" onclick="Modules.Builder.add('text')"><i class="ph ph-text-t"></i> Text Block</div>
+                        <div class="block-btn" onclick="Modules.Builder.add('cta')"><i class="ph ph-megaphone"></i> Call to Action</div>
+                        <div class="block-btn" onclick="Modules.Builder.add('footer')"><i class="ph ph-layout"></i> Footer</div>
                     </div>
                 </div>
 
-                <div class="b-canvas-area">
+                <div class="b-canvas-wrapper">
                     <div class="b-toolbar">
-                        <button class="device-btn active" onclick="Modules.Builder.setMode('desktop')"><i class="ph ph-desktop"></i></button>
-                        <button class="device-btn" onclick="Modules.Builder.setMode('mobile')"><i class="ph ph-device-mobile"></i></button>
-                        <div style="width: 20px;"></div>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="Modules.Builder.exportSite()"><i class="ph ph-export"></i> Export HTML</button>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn" style="background:transparent; border:1px solid var(--border); padding:5px 10px;" onclick="Modules.Builder.setDevice('desktop')"><i class="ph ph-desktop"></i></button>
+                            <button class="btn" style="background:transparent; border:1px solid var(--border); padding:5px 10px;" onclick="Modules.Builder.setDevice('mobile')"><i class="ph ph-device-mobile"></i></button>
+                        </div>
+                        <button class="btn" onclick="Modules.Builder.exportSite()">Export HTML <i class="ph ph-export"></i></button>
                     </div>
                     <div class="b-viewport">
-                        <div id="canvas" class="canvas-frame desktop">
+                        <div id="website-frame" class="website-frame">
                             </div>
+                    </div>
+                </div>
+
+                <div class="b-sidebar-right" id="inspector-panel">
+                    <div style="padding:15px; font-weight:700; border-bottom:1px solid var(--border);">Inspector</div>
+                    <div id="inspector-content" style="padding:15px; color:var(--text-muted); font-size:0.9rem;">
+                        Select a block to edit its background, colors, and layout.
                     </div>
                 </div>
 
@@ -318,331 +228,321 @@
         </div>
 
     </main>
+</div>
 
-    <script>
-        /* --- CORE STATE --- */
-        const App = {
-            data: {
-                industry: 'tech',
-                keyword: '',
-                desc: '',
-                brandName: 'LaunchBrand',
-                blocks: []
-            },
-            
-            init: () => {
-                const saved = localStorage.getItem('launchOS_v7');
-                if(saved) App.data = JSON.parse(saved);
-                
-                // Hydrate inputs
-                document.getElementById('inp-industry').value = App.data.industry;
-                document.getElementById('inp-keyword').value = App.data.keyword;
-                document.getElementById('inp-desc').value = App.data.desc;
-                document.getElementById('active-brand-display').innerText = App.data.brandName;
-                
-                // Init modules
-                Modules.Builder.init();
-            },
+<script>
+    /* --- DATA STORE --- */
+    const State = {
+        industry: 'food',
+        keyword: '',
+        brandName: 'MyBrand',
+        blocks: []
+    };
 
-            saveProfile: () => {
-                App.data.industry = document.getElementById('inp-industry').value;
-                App.data.keyword = document.getElementById('inp-keyword').value;
-                App.data.desc = document.getElementById('inp-desc').value;
-                App.persist();
-                App.route('branding');
-            },
-
-            persist: () => {
-                localStorage.setItem('launchOS_v7', JSON.stringify(App.data));
-            },
-
-            route: (id) => {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                document.getElementById('view-'+id).classList.add('active');
-                
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                // Just highlight current (simplified)
+    /* --- APP CONTROLLER --- */
+    const App = {
+        init: () => {
+            if(localStorage.getItem('brandForge_v8')) {
+                const data = JSON.parse(localStorage.getItem('brandForge_v8'));
+                Object.assign(State, data);
+                document.getElementById('inp-industry').value = State.industry;
+                document.getElementById('inp-keyword').value = State.keyword;
             }
-        };
-
-        /* --- MODULES --- */
-        const Modules = {
+            Modules.Builder.render();
+        },
+        saveProfile: () => {
+            State.industry = document.getElementById('inp-industry').value;
+            State.keyword = document.getElementById('inp-keyword').value;
+            localStorage.setItem('brandForge_v8', JSON.stringify(State));
+            App.route('names');
+        },
+        route: (id) => {
+            document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
             
-            // 1. ADVANCED NAMING GENERATOR
-            Branding: {
-                generate: () => {
-                    const seed = App.data.keyword.replace(/[^a-zA-Z]/g, '') || "Nova";
-                    const ind = App.data.industry;
-                    const style = document.getElementById('inp-namestyle').value;
-                    const grid = document.getElementById('name-grid');
-                    grid.innerHTML = '';
-                    
-                    // Phonetic Components
-                    const prefixes = ['Vel', 'Nov', 'Syn', 'Aero', 'Lumi', 'Omni', 'Zen', 'Arc'];
-                    const suffixes = ['os', 'ix', 'ex', 'ify', 'ly', 'gen', 'flow', 'base'];
-                    const foodRoots = ['Taste', 'Bite', 'Pure', 'Zest', 'Root', 'Leaf', 'Coco'];
-                    
-                    let names = [];
+            if(id === 'builder') {
+                document.getElementById('view-builder').style.display = 'block';
+            } else {
+                document.getElementById('view-builder').style.display = 'none';
+                document.getElementById('view-'+id).classList.add('active');
+            }
+        }
+    };
 
-                    for(let i=0; i<6; i++) {
-                        let n = "";
-                        if(style === 'modern') {
-                            n = prefixes[Math.floor(Math.random()*prefixes.length)] + suffixes[Math.floor(Math.random()*suffixes.length)];
-                        } else if(style === 'compound') {
-                            n = seed + suffixes[Math.floor(Math.random()*suffixes.length)];
-                        } else {
-                            // Classic
-                            n = (ind==='food'? foodRoots[Math.floor(Math.random()*foodRoots.length)] : prefixes[Math.floor(Math.random()*prefixes.length)]) + "ura";
-                        }
-                        // Capitalize
-                        n = n.charAt(0).toUpperCase() + n.slice(1);
-                        names.push(n);
-                    }
+    /* --- MODULES --- */
+    const Modules = {
+        
+        // 1. SEMANTIC NAMING
+        Branding: {
+            generate: () => {
+                const k = State.keyword.replace(/[^a-zA-Z]/g, '') || "Core";
+                const ind = State.industry;
+                const vibe = document.getElementById('inp-vibe').value;
+                const grid = document.getElementById('name-grid');
+                grid.innerHTML = '';
 
-                    names.forEach(name => {
-                        const div = document.createElement('div');
-                        div.className = 'name-card';
-                        div.innerHTML = `
-                            <div>
-                                <div class="name-main">${name}</div>
-                                <div style="color:var(--text-muted); font-size:0.8rem; margin-top:4px;">${name.toLowerCase()}.com</div>
-                            </div>
-                            <span class="domain-tag">Available</span>
-                        `;
-                        div.onclick = () => {
-                            App.data.brandName = name;
-                            App.persist();
-                            document.getElementById('active-brand-display').innerText = name;
-                            document.querySelectorAll('.name-card').forEach(c => c.classList.remove('selected'));
-                            div.classList.add('selected');
-                        };
-                        grid.appendChild(div);
-                    });
+                // SEMANTIC DICTIONARY
+                const roots = {
+                    food: ['Gusto', 'Savor', 'Culi', 'Nour', 'Vita', 'Bite', 'Hearth', 'Zest'],
+                    tech: ['Sys', 'Net', 'Nov', 'Sync', 'Data', 'Link', 'Node', 'Soft'],
+                    fashion: ['Vogue', 'Moda', 'Trend', 'Lux', 'Wear', 'Chic', 'Style', 'Aura'],
+                    health: ['Vital', 'Zen', 'Pure', 'Heal', 'Life', 'Bio', 'Well', 'Care']
+                };
+                
+                const suffixes = {
+                    premium: ['ia', 'us', 'ora', 'ex', 'os', 'lux'],
+                    modern: ['ify', 'ly', 'io', 'co', 'lab', 'hub'],
+                    friendly: ['pal', 'mate', 'spot', 'joy', 'box', 'hut']
+                };
+
+                const chosenRoots = roots[ind] || roots.tech;
+                const chosenSuffixes = suffixes[vibe] || suffixes.modern;
+                
+                let names = [];
+
+                // Algorithm 1: Semantic Root + Suffix
+                for(let i=0; i<4; i++) {
+                    const r = chosenRoots[Math.floor(Math.random()*chosenRoots.length)];
+                    const s = chosenSuffixes[Math.floor(Math.random()*chosenSuffixes.length)];
+                    names.push(r + s);
                 }
-            },
 
-            // 2. STRATEGY ENGINE
-            Strategy: {
-                run: () => {
-                    document.getElementById('strategy-output').style.display = 'block';
-                    const ind = App.data.industry;
-                    
-                    // Templates
-                    const data = {
-                        tech: {
-                            s: ["Scalable software architecture", "Low marginal cost of replication"],
-                            w: ["High initial development time", "Requires constant updates"],
-                            o: ["Integration with AI tools", "Expansion into enterprise markets"],
-                            t: ["Rapidly changing technology", "Data privacy regulations"]
-                        },
-                        food: {
-                            s: ["Unique flavor profile", "Local sourcing appeal"],
-                            w: ["Perishable inventory", "Limited delivery radius"],
-                            o: ["Catering for corporate events", "Subscription boxes"],
-                            t: ["Rising ingredient costs", "Health regulation changes"]
-                        },
-                        fashion: {
-                            s: ["Strong brand aesthetic", "High profit margins per unit"],
-                            w: ["Seasonal inventory risk", "High return rates"],
-                            o: ["Influencer collaborations", "Sustainable material lines"],
-                            t: ["Fast fashion competitors", "Changing consumer trends"]
-                        }
-                    };
+                // Algorithm 2: Keyword + Semantic Adjective
+                const adjectives = ind === 'food' ? ['Tasty', 'Fresh', 'Urban', 'Royal'] : ['Smart', 'Pro', 'Neo', 'Hyper'];
+                names.push(adjectives[Math.floor(Math.random()*adjectives.length)] + k);
 
-                    const content = data[ind] || data.tech;
-                    
-                    document.getElementById('swot-s').innerHTML = content.s.map(i => `• ${i}`).join('<br>');
-                    document.getElementById('swot-w').innerHTML = content.w.map(i => `• ${i}`).join('<br>');
-                    document.getElementById('swot-o').innerHTML = content.o.map(i => `• ${i}`).join('<br>');
-                    document.getElementById('swot-t').innerHTML = content.t.map(i => `• ${i}`).join('<br>');
+                // Algorithm 3: The "Brandable" Keyword (Keyword + Latin suffix)
+                names.push(k + (vibe === 'premium' ? 'ora' : 'ify'));
 
-                    document.getElementById('marketing-ideas').innerHTML = `
-                        <ul style="padding-left:20px; color:var(--text-muted); line-height:1.8;">
-                            <li><strong>Launch Strategy:</strong> Offer a "Founder's Club" lifetime discount for the first 100 users.</li>
-                            <li><strong>Content:</strong> Document the "Building of ${App.data.brandName}" on social media to build authenticity.</li>
-                            <li><strong>Partnership:</strong> Collaborate with complementary brands in the ${ind} space for cross-promotion.</li>
-                        </ul>
-                    `;
-                }
-            },
-
-            // 3. WIX-LEVEL BUILDER
-            Builder: {
-                activeImgTarget: null,
-
-                init: () => {
-                    // Image upload listener
-                    document.getElementById('hidden-file-input').addEventListener('change', (e) => {
-                        if (e.target.files && e.target.files[0] && Modules.Builder.activeImgTarget) {
-                            const reader = new FileReader();
-                            reader.onload = function (evt) {
-                                Modules.Builder.activeImgTarget.src = evt.target.result;
-                                App.persist();
-                            };
-                            reader.readAsDataURL(e.target.files[0]);
-                        }
-                    });
-                    Modules.Builder.renderFromData();
-                    Modules.Builder.updateTheme();
-                },
-
-                triggerUpload: (imgEl) => {
-                    Modules.Builder.activeImgTarget = imgEl;
-                    document.getElementById('hidden-file-input').click();
-                },
-
-                add: (type) => {
-                    const id = 'blk-' + Date.now();
-                    const block = { id, type, content: {} }; // Basic structural ref
-                    App.data.blocks.push(block);
-                    App.persist();
-                    Modules.Builder.renderBlock(block, true); // Append
-                },
-
-                renderFromData: () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.innerHTML = '';
-                    App.data.blocks.forEach(b => Modules.Builder.renderBlock(b, false));
-                },
-
-                renderBlock: (block, append) => {
+                names.forEach(n => {
                     const div = document.createElement('div');
-                    div.className = 'web-block';
-                    div.id = block.id;
-                    
-                    // Hover Actions
-                    const actions = document.createElement('div');
-                    actions.className = 'block-actions';
-                    actions.innerHTML = `
-                        <button onclick="Modules.Builder.move('${block.id}', -1)">↑</button>
-                        <button onclick="Modules.Builder.move('${block.id}', 1)">↓</button>
-                        <button onclick="Modules.Builder.delete('${block.id}')">×</button>
-                    `;
-                    div.appendChild(actions);
+                    div.className = 'name-card';
+                    div.innerHTML = `<div><div class="name-main">${n}</div><small style="color:#64748b">${n.toLowerCase()}.com</small></div>`;
+                    div.onclick = () => {
+                        State.brandName = n;
+                        document.querySelectorAll('.name-card').forEach(c=>c.classList.remove('selected'));
+                        div.classList.add('selected');
+                        localStorage.setItem('brandForge_v8', JSON.stringify(State));
+                    };
+                    grid.appendChild(div);
+                });
+            }
+        },
+
+        // 2. PRO BUILDER
+        Builder: {
+            selectedId: null,
+
+            add: (type) => {
+                const id = 'blk-' + Date.now();
+                const block = { id, type, bgType: 'color', bgValue: '#ffffff', color: '#111111', padding: '60px 20px', content: {} };
+                
+                if(type === 'hero') {
+                    block.bgType = 'color';
+                    block.bgValue = '#f8fafc';
+                    block.content = { h1: 'Welcome to ' + State.brandName, p: 'The best quality products.', btn: 'Get Started' };
+                } 
+                else if (type === 'features') {
+                    block.content = { h2: 'Our Features', items: ['Quality', 'Speed', 'Support'] };
+                }
+                else if (type === 'gallery') {
+                    block.content = { h2: 'Our Gallery' };
+                }
+                else if (type === 'footer') {
+                    block.bgValue = '#1e293b';
+                    block.color = '#ffffff';
+                    block.content = { text: `© 2026 ${State.brandName}. All rights reserved.` };
+                }
+
+                State.blocks.push(block);
+                Modules.Builder.render();
+            },
+
+            render: () => {
+                const frame = document.getElementById('website-frame');
+                frame.innerHTML = '';
+
+                State.blocks.forEach(block => {
+                    const sec = document.createElement('div');
+                    sec.className = 'w-section';
+                    sec.id = block.id;
+                    if(Modules.Builder.selectedId === block.id) sec.classList.add('selected');
+
+                    // Apply Styles
+                    sec.style.color = block.color;
+                    sec.style.padding = block.padding;
+                    if(block.bgType === 'image') {
+                        sec.style.background = `url('${block.bgValue}') center/cover no-repeat`;
+                    } else {
+                        sec.style.background = block.bgValue;
+                    }
 
                     // Content Logic
                     let html = '';
-                    const style = `padding: 40px 20px;`;
-
                     if(block.type === 'hero') {
-                        div.style.cssText = `text-align: center; padding: 60px 20px; background: #f9fafb; ${style}`;
+                        // Hero with background overlay logic
                         html = `
-                            <h1 contenteditable="true" placeholder="Your Headline Here" style="font-size: 2.5rem; margin-bottom: 20px;">Welcome to ${App.data.brandName}</h1>
-                            <p contenteditable="true" placeholder="Subheadline goes here" style="font-size: 1.2rem; color: #666;">Describe your value proposition clearly.</p>
-                            <img src="https://placehold.co/800x400/e2e8f0/94a3b8?text=Click+To+Upload+Image" class="img-placeholder" style="width:100%; max-width:600px; margin-top:30px; border-radius:8px;" onclick="Modules.Builder.triggerUpload(this)">
-                        `;
-                    } else if (block.type === 'features') {
-                         div.style.cssText = `padding: 60px 20px; ${style}`;
-                         html = `
-                            <h2 contenteditable="true" style="text-align:center; margin-bottom:40px;">Our Features</h2>
-                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
-                                <div style="padding:20px; border:1px solid #eee; border-radius:8px;">
-                                    <h3 contenteditable="true">Feature 1</h3>
-                                    <p contenteditable="true">Description.</p>
-                                </div>
-                                <div style="padding:20px; border:1px solid #eee; border-radius:8px;">
-                                    <h3 contenteditable="true">Feature 2</h3>
-                                    <p contenteditable="true">Description.</p>
-                                </div>
-                                <div style="padding:20px; border:1px solid #eee; border-radius:8px;">
-                                    <h3 contenteditable="true">Feature 3</h3>
-                                    <p contenteditable="true">Description.</p>
-                                </div>
-                            </div>
-                         `;
-                    } else if (block.type === 'gallery') {
-                        div.style.cssText = `padding: 40px 20px; ${style}`;
-                        html = `
-                            <h2 contenteditable="true" style="text-align:center;">Gallery</h2>
-                            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:20px;">
-                                <img src="https://placehold.co/300/e2e8f0/94a3b8?text=Upload" class="img-placeholder" style="width:100%; border-radius:4px;" onclick="Modules.Builder.triggerUpload(this)">
-                                <img src="https://placehold.co/300/e2e8f0/94a3b8?text=Upload" class="img-placeholder" style="width:100%; border-radius:4px;" onclick="Modules.Builder.triggerUpload(this)">
-                                <img src="https://placehold.co/300/e2e8f0/94a3b8?text=Upload" class="img-placeholder" style="width:100%; border-radius:4px;" onclick="Modules.Builder.triggerUpload(this)">
+                            <div style="max-width:800px; margin:0 auto; text-align:center;">
+                                <h1 contenteditable="true" style="font-size:3rem; margin-bottom:20px;">${block.content.h1}</h1>
+                                <p contenteditable="true" style="font-size:1.2rem; opacity:0.9; margin-bottom:30px;">${block.content.p}</p>
+                                <button style="padding:15px 30px; background:${State.industry==='food'?'#f59e0b':'#6366f1'}; color:white; border:none; border-radius:6px; font-size:1rem; cursor:pointer;">${block.content.btn}</button>
                             </div>
                         `;
-                    } else if (block.type === 'footer') {
-                        div.style.cssText = `background: #111; color: white; padding: 40px 20px; text-align: center; ${style}`;
-                        html = `<p contenteditable="true">&copy; 2026 ${App.data.brandName}. All rights reserved.</p>`;
-                    } else {
-                        // Generic Text
-                         div.style.cssText = `${style}`;
-                         html = `<div contenteditable="true">Click to edit this rich text block.</div>`;
+                    }
+                    else if(block.type === 'gallery') {
+                        html = `
+                            <h2 contenteditable="true" style="text-align:center; margin-bottom:40px;">${block.content.h2}</h2>
+                            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+                                <div style="height:200px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;" onclick="Modules.Builder.uploadBg(this)">Click to Upload</div>
+                                <div style="height:200px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;" onclick="Modules.Builder.uploadBg(this)">Click to Upload</div>
+                                <div style="height:200px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;" onclick="Modules.Builder.uploadBg(this)">Click to Upload</div>
+                            </div>
+                        `;
+                    }
+                    else if(block.type === 'footer') {
+                         html = `<div contenteditable="true" style="text-align:center;">${block.content.text}</div>`;
+                    }
+                    else {
+                        // Generic
+                        html = `<div contenteditable="true">Click to edit this content.</div>`;
                     }
 
-                    div.insertAdjacentHTML('beforeend', html);
-                    const canvas = document.getElementById('canvas');
-                    if(append) canvas.appendChild(div); else canvas.appendChild(div);
-                },
-
-                move: (id, dir) => {
-                    const idx = App.data.blocks.findIndex(b => b.id === id);
-                    if (dir === -1 && idx > 0) {
-                        [App.data.blocks[idx], App.data.blocks[idx-1]] = [App.data.blocks[idx-1], App.data.blocks[idx]];
-                    } else if (dir === 1 && idx < App.data.blocks.length - 1) {
-                        [App.data.blocks[idx], App.data.blocks[idx+1]] = [App.data.blocks[idx+1], App.data.blocks[idx]];
-                    }
-                    Modules.Builder.renderFromData();
-                },
-
-                delete: (id) => {
-                    App.data.blocks = App.data.blocks.filter(b => b.id !== id);
-                    Modules.Builder.renderFromData();
-                },
-
-                setMode: (mode) => {
-                    const f = document.getElementById('canvas');
-                    f.className = `canvas-frame ${mode}`;
-                },
-
-                updateTheme: () => {
-                    const color = document.getElementById('theme-color').value;
-                    const font = document.getElementById('theme-font').value;
-                    const canvas = document.getElementById('canvas');
+                    sec.innerHTML = html;
                     
-                    canvas.style.fontFamily = font;
-                    // Inject dynamic style for buttons inside canvas
-                    let styleTag = document.getElementById('dynamic-theme-style');
-                    if(!styleTag) {
-                        styleTag = document.createElement('style');
-                        styleTag.id = 'dynamic-theme-style';
-                        document.body.appendChild(styleTag);
-                    }
-                    styleTag.innerHTML = `
-                        #canvas h1, #canvas h2, #canvas h3 { color: #111; }
-                        #canvas button { background-color: ${color} !important; }
-                        #canvas .web-block:hover { border-color: ${color} !important; }
-                        #canvas .block-actions { background-color: ${color} !important; }
+                    // Handles
+                    const h = document.createElement('div');
+                    h.className = 'w-handles';
+                    h.innerHTML = `
+                        <div class="handle-btn" onclick="Modules.Builder.move('${block.id}', -1)">↑</div>
+                        <div class="handle-btn" onclick="Modules.Builder.move('${block.id}', 1)">↓</div>
+                        <div class="handle-btn" onclick="Modules.Builder.delete('${block.id}')">×</div>
                     `;
-                },
+                    sec.appendChild(h);
 
-                exportSite: () => {
-                    const clone = document.getElementById('canvas').cloneNode(true);
-                    // Cleanup
-                    clone.querySelectorAll('.block-actions').forEach(e => e.remove());
-                    clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
-                    clone.className = ''; // remove width restrictions
-                    clone.style.width = '100%';
-                    clone.style.maxWidth = '100%';
-                    clone.style.border = 'none';
-                    
-                    const html = `<!DOCTYPE html><html><head><title>${App.data.brandName}</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@600&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
-                    <style>body{margin:0;font-family:${document.getElementById('theme-font').value};line-height:1.6;} img{max-width:100%;height:auto;}</style>
-                    </head><body>${clone.innerHTML}</body></html>`;
-                    
-                    const blob = new Blob([html], {type: 'text/html'});
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'website.html';
-                    a.click();
+                    // Selection
+                    sec.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        Modules.Builder.select(block.id);
+                    });
+
+                    frame.appendChild(sec);
+                });
+            },
+
+            select: (id) => {
+                Modules.Builder.selectedId = id;
+                Modules.Builder.render(); // Redraw selection border
+
+                const block = State.blocks.find(b => b.id === id);
+                const panel = document.getElementById('inspector-content');
+                
+                panel.innerHTML = `
+                    <div class="prop-group">
+                        <div class="prop-title">Block Settings</div>
+                        <label>Block Type: <span style="color:white">${block.type.toUpperCase()}</span></label>
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-title">Background</div>
+                        <label>Color</label>
+                        <input type="color" value="${block.bgType === 'color' ? block.bgValue : '#ffffff'}" oninput="Modules.Builder.updateProp('${id}', 'bgValue', this.value); Modules.Builder.updateProp('${id}', 'bgType', 'color')">
+                        <br><br>
+                        <label>Image</label>
+                        <button class="btn" style="width:100%; font-size:0.8rem;" onclick="Modules.Builder.triggerBgUpload('${id}')">Upload Image</button>
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-title">Typography</div>
+                        <label>Text Color</label>
+                        <input type="color" value="${block.color}" oninput="Modules.Builder.updateProp('${id}', 'color', this.value)">
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-title">Layout</div>
+                        <label>Padding</label>
+                        <select onchange="Modules.Builder.updateProp('${id}', 'padding', this.value)">
+                            <option value="40px 20px" ${block.padding === '40px 20px' ? 'selected':''}>Small</option>
+                            <option value="60px 20px" ${block.padding === '60px 20px' ? 'selected':''}>Medium</option>
+                            <option value="100px 20px" ${block.padding === '100px 20px' ? 'selected':''}>Large (Hero)</option>
+                        </select>
+                    </div>
+                `;
+            },
+
+            updateProp: (id, key, val) => {
+                const b = State.blocks.find(x => x.id === id);
+                if(b) b[key] = val;
+                Modules.Builder.render();
+            },
+
+            // --- IMAGE LOGIC ---
+            triggerBgUpload: (id) => {
+                const input = document.getElementById('img-uploader');
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if(file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            Modules.Builder.updateProp(id, 'bgType', 'image');
+                            Modules.Builder.updateProp(id, 'bgValue', evt.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            },
+            
+            uploadBg: (divElement) => {
+                const input = document.getElementById('img-uploader');
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if(file) {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            divElement.style.background = `url(${evt.target.result}) center/cover`;
+                            divElement.innerText = '';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                input.click();
+            },
+
+            move: (id, dir) => {
+                const idx = State.blocks.findIndex(b => b.id === id);
+                if (dir === -1 && idx > 0) {
+                    [State.blocks[idx], State.blocks[idx-1]] = [State.blocks[idx-1], State.blocks[idx]];
+                } else if (dir === 1 && idx < State.blocks.length - 1) {
+                    [State.blocks[idx], State.blocks[idx+1]] = [State.blocks[idx+1], State.blocks[idx]];
                 }
+                Modules.Builder.render();
+            },
+
+            delete: (id) => {
+                State.blocks = State.blocks.filter(b => b.id !== id);
+                Modules.Builder.render();
+                document.getElementById('inspector-content').innerHTML = 'Select a block...';
+            },
+
+            setDevice: (type) => {
+                const f = document.getElementById('website-frame');
+                f.className = `website-frame ${type}`;
+            },
+
+            exportSite: () => {
+                const htmlContent = document.getElementById('website-frame').innerHTML;
+                const finalHTML = `<!DOCTYPE html><html><head><title>${State.brandName}</title><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"><style>body{margin:0;font-family:'Inter',sans-serif;} .w-handles{display:none;} [contenteditable]{outline:none;}</style></head><body>${htmlContent}</body></html>`;
+                
+                const blob = new Blob([finalHTML], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'website.html';
+                a.click();
             }
-        };
+        }
+    };
 
-        // Boot
-        window.onload = App.init;
-
-    </script>
+    window.onload = App.init;
+</script>
 </body>
 </html>
