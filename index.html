@@ -3,638 +3,723 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaunchPad Pro | The Founder's OS</title>
-    
+    <title>FounderOS | Ultimate Brand & Business Builder</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CORE VARIABLES --- */
+        /* --- THEME VARIABLES --- */
         :root {
-            --primary: #6366f1; /* Indigo 500 */
-            --primary-hover: #4f46e5;
-            --bg-body: #f3f4f6;
-            --bg-card: #ffffff;
-            --text-main: #111827;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --radius-sm: 6px;
-            --radius-lg: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --primary: #2563EB;
+            --primary-dark: #1E40AF;
+            --secondary: #64748B;
+            --accent: #F59E0B;
+            --bg-body: #F1F5F9;
+            --bg-panel: #FFFFFF;
+            --text-main: #0F172A;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --font-main: 'Inter', sans-serif;
         }
 
         /* --- GLOBAL RESET --- */
         * { box-sizing: border-box; outline: none; }
-        body { margin: 0; padding: 0; font-family: var(--font-main); background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
-        
+        body { margin: 0; padding: 0; font-family: var(--font-main); background: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+
         /* --- LAYOUT --- */
-        aside {
-            width: 280px; background: #ffffff; border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; z-index: 20;
+        aside { 
+            width: 260px; background: #0F172A; color: white; display: flex; flex-direction: column; 
+            flex-shrink: 0; z-index: 50; transition: width 0.3s;
         }
+        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         
-        main { flex: 1; overflow-y: auto; position: relative; scroll-behavior: smooth; }
-
         /* --- SIDEBAR --- */
-        .brand-header { padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border); }
-        .brand-logo { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center; color: white; font-weight: bold; }
-        .brand-name { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
-
-        .nav-links { padding: 1rem; flex: 1; }
+        .brand { padding: 1.5rem; font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1E293B; }
+        .brand i { color: var(--primary); }
+        .nav-menu { padding: 1rem; flex: 1; overflow-y: auto; }
         .nav-item {
-            display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem;
-            margin-bottom: 0.25rem; border: none; background: transparent; color: var(--text-muted);
-            font-weight: 500; cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s;
-            text-align: left; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 12px; padding: 12px; width: 100%; text-align: left;
+            background: transparent; border: none; color: #94A3B8; cursor: pointer; border-radius: 6px;
+            font-weight: 500; margin-bottom: 4px; transition: all 0.2s; font-size: 0.95rem;
         }
-        .nav-item:hover { background: #f9fafb; color: var(--primary); }
-        .nav-item.active { background: #eef2ff; color: var(--primary); font-weight: 600; }
-        .nav-item i { font-size: 1.2rem; }
-
-        /* --- CONTENT AREAS --- */
-        .view-section { display: none; padding: 2rem; max-width: 1400px; margin: 0 auto; animation: fadeUp 0.4s ease; }
-        .view-section.active { display: block; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h1 { font-size: 1.875rem; font-weight: 700; margin: 0 0 0.5rem 0; letter-spacing: -0.025em; }
-        p.desc { color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; line-height: 1.5; }
-
-        /* --- COMPONENTS --- */
-        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 1.5rem; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .nav-item:hover { background: #1E293B; color: white; }
+        .nav-item.active { background: var(--primary); color: white; }
         
-        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: #374151; }
+        /* --- SCROLLABLE CONTENT AREA --- */
+        .workspace { flex: 1; overflow-y: auto; padding: 2rem; scroll-behavior: smooth; }
+        .section-view { display: none; animation: fadeIn 0.3s ease-out; max-width: 1400px; margin: 0 auto; }
+        .section-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- UI COMPONENTS --- */
+        h1 { font-size: 2rem; margin: 0 0 0.5rem 0; color: #1E293B; letter-spacing: -0.5px; }
+        h2 { font-size: 1.25rem; margin: 1.5rem 0 1rem 0; color: #334155; }
+        p.subtitle { color: var(--text-light); margin-bottom: 2rem; max-width: 700px; }
+
+        .card { background: var(--bg-panel); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #475569; }
         input, select, textarea {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
-            font-size: 0.95rem; transition: border 0.2s, box-shadow 0.2s; background: #fff;
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 0.95rem; font-family: var(--font-main); transition: border 0.2s;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
-        
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
         .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.75rem 1.5rem; background: var(--primary); color: white; border: none;
-            border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: transform 0.1s, background 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.95rem;
         }
-        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
-        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; }
-        .btn-danger { background: #fee2e2; color: #b91c1c; }
-        .btn-danger:hover { background: #fecaca; }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        .btn-danger { background: #EF4444; color: white; }
+        .btn-danger:hover { background: #DC2626; }
 
-        /* --- SPECIFIC: BUILDER UI --- */
-        .builder-container { display: flex; height: calc(100vh - 140px); gap: 1rem; }
-        .builder-controls { width: 320px; overflow-y: auto; padding-right: 0.5rem; }
-        .builder-preview { flex: 1; background: #e5e7eb; border-radius: var(--radius-lg); border: 4px solid #374151; position: relative; overflow: hidden; }
-        .preview-iframe { width: 100%; height: 100%; border: none; background: white; }
-        
-        .control-group { background: white; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 1rem; overflow: hidden; }
-        .control-header { padding: 1rem; background: #f9fafb; border-bottom: 1px solid var(--border); font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
-        .control-body { padding: 1rem; display: none; }
-        .control-body.open { display: block; }
-        
-        .block-card { 
-            padding: 0.75rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); 
-            margin-bottom: 0.5rem; cursor: move; background: #fff; display: flex; align-items: center; justify-content: space-between;
+        /* --- NAME GENERATOR STYLES --- */
+        .name-badge {
+            background: white; border: 1px solid var(--border); padding: 1rem; border-radius: 8px;
+            position: relative; overflow: hidden; cursor: pointer; transition: all 0.2s;
         }
-        .block-card:hover { border-color: var(--primary); background: #eef2ff; }
+        .name-badge:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+        .name-badge.selected { border: 2px solid var(--primary); background: #EFF6FF; }
+        .name-badge h3 { margin: 0; font-size: 1.2rem; color: #1E293B; }
+        .name-meta { font-size: 0.75rem; color: #64748B; display: flex; justify-content: space-between; margin-top: 8px; }
+        .avail-dot { height: 8px; width: 8px; background: #10B981; border-radius: 50%; display: inline-block; margin-right: 4px; }
 
-        /* --- SPECIFIC: NAMES --- */
-        .name-chip {
-            background: white; border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius-sm);
-            display: flex; justify-content: space-between; align-items: center;
+        /* --- BUILDER UI STYLES --- */
+        .builder-layout { display: flex; gap: 20px; height: calc(100vh - 120px); }
+        .builder-sidebar { width: 340px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 10px; }
+        .builder-canvas { flex: 1; background: #E2E8F0; border-radius: 12px; overflow: hidden; border: 1px solid #CBD5E1; position: relative; }
+        .canvas-frame { width: 100%; height: 100%; border: none; background: white; }
+
+        .section-item {
+            background: white; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px;
+            overflow: hidden; transition: all 0.2s;
         }
-        .name-chip .avail-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #10b981; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; }
+        .section-header {
+            padding: 10px 15px; background: #F8FAFC; cursor: pointer; display: flex; 
+            justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem;
+        }
+        .section-header:hover { background: #F1F5F9; }
+        .section-body { padding: 15px; border-top: 1px solid var(--border); display: none; }
+        .section-body.open { display: block; }
+
+        .control-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .range-slider { width: 100%; }
         
-        /* --- RESPONSIVE --- */
+        /* Mobile */
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; }
-            aside { width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 0.5rem; }
-            .nav-links { display: flex; overflow-x: auto; gap: 0.5rem; padding: 0; }
-            .nav-item { width: auto; white-space: nowrap; margin: 0; }
-            .builder-container { flex-direction: column; height: auto; }
-            .builder-controls { width: 100%; }
-            .builder-preview { height: 500px; }
+            aside { width: 100%; height: auto; flex-direction: row; align-items: center; padding: 0.5rem; }
+            .nav-menu { display: flex; padding: 0; overflow-x: auto; }
+            .nav-item { margin: 0 5px; width: auto; white-space: nowrap; }
+            .builder-layout { flex-direction: column; height: auto; }
+            .builder-sidebar { width: 100%; max-height: 400px; }
+            .builder-canvas { height: 500px; }
         }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="brand-header">
-            <div class="brand-logo">LP</div>
-            <div class="brand-name">LaunchPad</div>
-        </div>
-        <nav class="nav-links">
-            <button class="nav-item active" onclick="app.router('profile')">
-                <i class="ph ph-user-circle"></i> Profile
-            </button>
-            <button class="nav-item" onclick="app.router('names')">
-                <i class="ph ph-lightbulb"></i> Branding
-            </button>
-            <button class="nav-item" onclick="app.router('strategy')">
-                <i class="ph ph-strategy"></i> Strategy
-            </button>
-            <button class="nav-item" onclick="app.router('builder')">
-                <i class="ph ph-monitor"></i> Web Builder
-            </button>
-        </nav>
-    </aside>
+<aside>
+    <div class="brand"><i class="ph-fill ph-rocket-launch"></i> FounderOS</div>
+    <nav class="nav-menu">
+        <button class="nav-item active" onclick="app.route('profile')"><i class="ph ph-user-circle"></i> Business Profile</button>
+        <button class="nav-item" onclick="app.route('branding')"><i class="ph ph-magic-wand"></i> Premium Branding</button>
+        <button class="nav-item" onclick="app.route('strategy')"><i class="ph ph-chart-line-up"></i> Strategy & Roadmap</button>
+        <button class="nav-item" onclick="app.route('builder')"><i class="ph ph-desktop"></i> Pro Website Builder</button>
+    </nav>
+    <div style="padding: 1.5rem; font-size: 0.8rem; color: #475569; border-top: 1px solid #1E293B;">
+        Local Mode • v3.0
+    </div>
+</aside>
 
-    <main>
-        
-        <div id="view-profile" class="view-section active">
-            <h1>Business Identity</h1>
-            <p class="desc">Define the core DNA of your business. The AI engine uses this data to generate everything else.</p>
+<main>
+    <div class="workspace">
+
+        <div id="view-profile" class="section-view active">
+            <h1>Business DNA</h1>
+            <p class="subtitle">Enter your details once. We use this to generate your brand, strategy, and website.</p>
             
             <div class="card">
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>Business Type / Industry</label>
-                        <select id="inp-industry" onchange="app.saveData()">
-                            <option value="food">Food & Beverage (Traditional/Modern)</option>
-                            <option value="tech">SaaS / Technology</option>
-                            <option value="service">Freelance Service / Agency</option>
+                        <label>Primary Industry</label>
+                        <select id="p-industry">
+                            <option value="food">Food & Beverage (e.g. Traditional/Modern)</option>
+                            <option value="tech">SaaS / Technology / App</option>
                             <option value="fashion">Fashion & Lifestyle</option>
+                            <option value="service">Freelance / Agency / Consulting</option>
                             <option value="health">Health & Wellness</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Core Keyword (e.g., Brownie, Code, Yoga)</label>
-                        <input type="text" id="inp-keyword" placeholder="e.g., Brownie" oninput="app.saveData()">
+                        <label>Seed Keyword (e.g. Brownie, Code, Yoga)</label>
+                        <input type="text" id="p-keyword" placeholder="e.g. Brownie">
                     </div>
                 </div>
-                <br>
                 <div class="form-group">
-                    <label>Unique Selling Proposition (USP)</label>
-                    <input type="text" id="inp-usp" placeholder="e.g., Traditional Kelveragu made modern and healthy" oninput="app.saveData()">
+                    <label>Business Description</label>
+                    <textarea id="p-desc" rows="3" placeholder="e.g. Making traditional kelveragu brownies with a modern healthy twist..."></textarea>
                 </div>
-                <br>
-                <div class="form-group">
-                    <label>Detailed Description</label>
-                    <textarea id="inp-desc" rows="4" placeholder="Describe your product, your goals, and your vibe..." oninput="app.saveData()"></textarea>
-                </div>
-                <br>
                 <div class="form-group">
                     <label>Target Audience</label>
-                    <input type="text" id="inp-audience" placeholder="e.g., Health conscious millennials in metro cities" oninput="app.saveData()">
+                    <input type="text" id="p-audience" placeholder="e.g. Gen-Z health enthusiasts in urban areas">
                 </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end;">
-                <button class="btn" onclick="app.router('names')">Next: Branding <i class="ph ph-arrow-right"></i></button>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Business Phone (For WhatsApp Link)</label>
+                        <input type="text" id="p-phone" placeholder="+91 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Email</label>
+                        <input type="email" id="p-email" placeholder="contact@business.com">
+                    </div>
+                </div>
+                <button class="btn" onclick="app.saveProfile()">Save & Continue <i class="ph ph-arrow-right"></i></button>
             </div>
         </div>
 
-        <div id="view-names" class="view-section">
-            <h1>Identity Generator</h1>
-            <p class="desc">Smart phonetic mixing to create brandable names.</p>
+        <div id="view-branding" class="section-view">
+            <h1>Brand Identity Engine</h1>
+            <p class="subtitle">Generate high-value, pronounceable names (Abstract, Compound, or Blended).</p>
 
             <div class="card">
-                <div class="grid-2">
-                    <button class="btn" onclick="modules.names.generate()">Generate New Ideas</button>
-                    <div style="text-align: right; color: var(--text-muted); font-size: 0.9rem; align-self: center;">
-                        Click name to use in Website Builder
+                <div class="form-group">
+                    <label>Name Style Preference</label>
+                    <div style="display: flex; gap: 15px; margin-top: 5px;">
+                        <label style="font-weight: normal;"><input type="checkbox" id="style-abstract" checked> Abstract (e.g. Nike, Zomato)</label>
+                        <label style="font-weight: normal;"><input type="checkbox" id="style-compound" checked> Compound (e.g. Facebook)</label>
+                        <label style="font-weight: normal;"><input type="checkbox" id="style-tech" checked> Modern/Tech (e.g. Spotify)</label>
                     </div>
                 </div>
-                <br>
-                <div class="grid-3" id="name-grid">
-                    </div>
+                <button class="btn" onclick="modules.branding.generate()">Generate Names</button>
+            </div>
+
+            <div class="grid-3" id="name-results"></div>
+            <div id="selected-brand-display" style="margin-top: 20px; padding: 15px; background: #ECFDF5; border: 1px solid #10B981; border-radius: 6px; display: none;">
+                <strong style="color: #047857;">Selected Brand: <span id="current-brand-name">None</span></strong>
+                <p style="font-size: 0.85rem; margin-top: 5px;">This name is now applied to your Website Builder.</p>
             </div>
         </div>
 
-        <div id="view-strategy" class="view-section">
-            <h1>Strategic Analysis</h1>
-            <p class="desc">A simulated competitor analysis and SWOT framework based on your industry inputs.</p>
+        <div id="view-strategy" class="section-view">
+            <h1>Strategic Roadmap</h1>
+            <p class="subtitle">Market fit analysis and step-by-step execution plan.</p>
+            
+            <button class="btn" onclick="modules.strategy.run()">Run Analysis</button>
 
-            <button class="btn" onclick="modules.strategy.generate()">Run Analysis</button>
-            <br><br>
-
-            <div id="strategy-output" style="display:none;">
+            <div id="strategy-content" style="display: none; margin-top: 1.5rem;">
                 <div class="card">
-                    <h3 style="margin-bottom: 1rem;"><i class="ph ph-users"></i> Competitor Archetypes</h3>
-                    <p style="color:var(--text-muted); margin-bottom:1rem;">Based on your industry, these are your likely competitors:</p>
-                    <div class="grid-3" id="comp-grid"></div>
+                    <h2>🚀 Execution Roadmap</h2>
+                    <div id="roadmap-list" style="display: flex; flex-direction: column; gap: 10px;"></div>
                 </div>
 
                 <div class="grid-2">
-                    <div class="card" style="border-left: 4px solid #10b981;">
-                        <h3>Strengths (Internal)</h3>
-                        <ul id="swot-s" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    <div class="card">
+                        <h2>💡 Business Idea Refinement</h2>
+                        <ul id="idea-tips" style="padding-left: 20px; color: #475569; line-height: 1.6;"></ul>
                     </div>
-                    <div class="card" style="border-left: 4px solid #ef4444;">
-                        <h3>Weaknesses (Internal)</h3>
-                        <ul id="swot-w" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
-                    </div>
-                    <div class="card" style="border-left: 4px solid #3b82f6;">
-                        <h3>Opportunities (External)</h3>
-                        <ul id="swot-o" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
-                    </div>
-                    <div class="card" style="border-left: 4px solid #f59e0b;">
-                        <h3>Threats (External)</h3>
-                        <ul id="swot-t" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    <div class="card">
+                        <h2>⚠️ Competitor Watchlist</h2>
+                        <div id="competitor-list"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="view-builder" class="view-section">
+        <div id="view-builder" class="section-view">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <div>
-                    <h1>Website Builder</h1>
-                    <p class="desc" style="margin:0;">Drag & drop components. Live Preview. Export HTML.</p>
-                </div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn btn-secondary" onclick="modules.builder.refreshPreview()"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
-                    <button class="btn" onclick="modules.builder.exportSite()"><i class="ph ph-download-simple"></i> Export Website</button>
+                <h1>Pro Website Builder</h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="modules.builder.refresh()"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
+                    <button class="btn" onclick="modules.builder.export()"><i class="ph ph-download-simple"></i> Export HTML</button>
                 </div>
             </div>
 
-            <div class="builder-container">
-                <div class="builder-controls">
+            <div class="builder-layout">
+                <div class="builder-sidebar">
                     
-                    <div class="control-group">
-                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
-                            🎨 Theme & Colors <i class="ph ph-caret-down"></i>
-                        </div>
-                        <div class="control-body open">
-                            <label>Primary Color</label>
-                            <input type="color" id="site-color" value="#4f46e5" style="height: 40px; margin-bottom: 1rem;" onchange="modules.builder.refreshPreview()">
-                            
-                            <label>Font Style</label>
-                            <select id="site-font" onchange="modules.builder.refreshPreview()">
-                                <option value="'Inter', sans-serif">Modern (Inter)</option>
-                                <option value="'Playfair Display', serif">Elegant (Serif)</option>
-                                <option value="'Courier New', monospace">Tech (Monospace)</option>
+                    <div class="card" style="padding: 10px; margin-bottom: 10px;">
+                        <h4 style="margin: 0 0 10px 0;">🎨 Global Theme</h4>
+                        <div class="form-group">
+                            <label>Preset Theme</label>
+                            <select id="site-theme" onchange="modules.builder.applyTheme()">
+                                <option value="modern">Modern Startup (Blue/Clean)</option>
+                                <option value="luxury">Luxury/Premium (Black/Serif)</option>
+                                <option value="playful">Playful/Food (Orange/Round)</option>
+                                <option value="minimal">Minimalist (Greyscale)</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
-                            ➕ Add Section <i class="ph ph-caret-down"></i>
-                        </div>
-                        <div class="control-body open">
-                            <div style="display: grid; gap: 0.5rem;">
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('hero')">Hero Header</button>
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('features')">Features Grid</button>
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('about')">About Us</button>
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('gallery')">Gallery</button>
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('cta')">Call to Action</button>
-                                <button class="btn btn-secondary" onclick="modules.builder.addSection('contact')">Contact Form</button>
-                            </div>
+                        <div class="grid-2" style="gap: 5px;">
+                            <div><label>Primary Color</label><input type="color" id="site-color" onchange="modules.builder.refresh()"></div>
+                            <div><label>Text Color</label><input type="color" id="site-text-color" value="#111827" onchange="modules.builder.refresh()"></div>
                         </div>
                     </div>
 
-                    <div class="control-group">
-                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
-                            📝 Manage Content <i class="ph ph-caret-down"></i>
+                    <div class="card" style="padding: 10px; margin-bottom: 10px; background: #F8FAFC;">
+                        <h4 style="margin: 0 0 10px 0;">➕ Add Component</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('hero')">Hero</button>
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('features')">Features</button>
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('gallery')">Gallery</button>
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('contact')">Contact</button>
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('text')">Rich Text</button>
+                            <button class="btn btn-outline btn-sm" onclick="modules.builder.add('cta')">CTA</button>
                         </div>
-                        <div class="control-body open" id="section-list">
-                            </div>
                     </div>
+
+                    <div id="section-list-container"></div>
 
                 </div>
 
-                <div class="builder-preview">
-                    <iframe id="preview-frame" class="preview-iframe"></iframe>
+                <div class="builder-canvas">
+                    <iframe id="preview-frame" class="canvas-frame"></iframe>
                 </div>
             </div>
         </div>
 
-    </main>
+    </div>
+</main>
 
-    <script>
-        // --- CORE STATE ---
-        const state = {
-            profile: {
-                industry: 'food',
-                keyword: '',
-                usp: '',
-                desc: '',
-                audience: '',
-                brandName: 'MyBrand'
-            },
-            builder: {
-                color: '#4f46e5',
-                font: "'Inter', sans-serif",
-                sections: [
-                    { id: '1', type: 'hero', title: 'Welcome to Future', subtitle: 'The best products for you.', btn: 'Get Started' },
-                    { id: '2', type: 'features', title: 'Why Choose Us?', items: ['Quality', 'Speed', 'Support'] }
-                ]
+<script>
+    // --- APP STORE ---
+    const store = {
+        profile: {
+            industry: 'food', keyword: '', desc: '', audience: '', phone: '', email: ''
+        },
+        branding: {
+            selectedName: 'BrandZero'
+        },
+        builder: {
+            theme: 'modern',
+            primaryColor: '#2563EB',
+            textColor: '#0F172A',
+            sections: [
+                { id: 's1', type: 'hero', title: 'Welcome to BrandZero', subtitle: 'The future of innovation starts here.', btnText: 'Get Started' },
+                { id: 's2', type: 'features', title: 'Why Choose Us', items: ['Premium Quality', '24/7 Support', 'Sustainable'] }
+            ]
+        }
+    };
+
+    // --- CORE APP CONTROLLER ---
+    const app = {
+        init: () => {
+            const saved = localStorage.getItem('founderOS_v3');
+            if(saved) {
+                const parsed = JSON.parse(saved);
+                store.profile = parsed.profile || store.profile;
+                store.branding = parsed.branding || store.branding;
+                store.builder = parsed.builder || store.builder;
             }
-        };
-
-        // --- APP CONTROLLER ---
-        const app = {
-            init: () => {
-                // Load from local storage
-                const saved = localStorage.getItem('launchPadData');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    state.profile = parsed.profile || state.profile;
-                    state.builder = parsed.builder || state.builder;
-                }
-                
-                // Populate inputs
-                document.getElementById('inp-industry').value = state.profile.industry;
-                document.getElementById('inp-keyword').value = state.profile.keyword;
-                document.getElementById('inp-usp').value = state.profile.usp;
-                document.getElementById('inp-desc').value = state.profile.desc;
-                document.getElementById('inp-audience').value = state.profile.audience;
-
-                // Initial render
-                modules.builder.renderSectionList();
-                modules.builder.refreshPreview();
-            },
-
-            router: (viewId) => {
-                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                
-                document.getElementById(`view-${viewId}`).classList.add('active');
-                // Highlight button logic would go here if strict index tracking needed
-            },
-
-            saveData: () => {
-                state.profile.industry = document.getElementById('inp-industry').value;
-                state.profile.keyword = document.getElementById('inp-keyword').value;
-                state.profile.usp = document.getElementById('inp-usp').value;
-                state.profile.desc = document.getElementById('inp-desc').value;
-                state.profile.audience = document.getElementById('inp-audience').value;
-                
-                localStorage.setItem('launchPadData', JSON.stringify(state));
-                // Update preview if builder is visible
-                modules.builder.refreshPreview();
-            }
-        };
-
-        // --- MODULES ---
-        const modules = {
             
-            // 1. BRANDING MODULE
-            names: {
-                generate: () => {
-                    const k = state.profile.keyword.replace(/\s/g, '') || "Brand";
-                    const industry = state.profile.industry;
-                    
-                    const prefixes = ['The', 'My', 'Go', 'Up', 'Neo', 'Pro', 'Zen', 'Nova', 'Hyper'];
-                    const suffixes = ['ify', 'ly', 'hub', 'lab', 'box', 'io', 'hq', 'works', 'base'];
-                    
-                    // Industry specific logic
-                    let extras = [];
-                    if(industry === 'food') extras = ['Eats', 'Bites', 'Kitchen', 'Table', 'Bowl', 'Fresh', 'Pure'];
-                    if(industry === 'tech') extras = ['Sys', 'Net', 'Soft', 'Data', 'Code', 'Stack', 'Flow'];
-                    if(industry === 'fashion') extras = ['Style', 'Wear', 'Look', 'Mode', 'Vogue', 'Thread'];
-                    
-                    let results = [];
+            // Hydrate Profile Inputs
+            document.getElementById('p-industry').value = store.profile.industry;
+            document.getElementById('p-keyword').value = store.profile.keyword;
+            document.getElementById('p-desc').value = store.profile.desc;
+            document.getElementById('p-audience').value = store.profile.audience;
+            document.getElementById('p-phone').value = store.profile.phone;
+            document.getElementById('p-email').value = store.profile.email;
+            document.getElementById('site-color').value = store.builder.primaryColor;
 
-                    // Strategy 1: Suffix
-                    for(let i=0; i<3; i++) results.push(k + suffixes[Math.floor(Math.random()*suffixes.length)]);
-                    
-                    // Strategy 2: Prefix
-                    for(let i=0; i<3; i++) results.push(prefixes[Math.floor(Math.random()*prefixes.length)] + k);
-                    
-                    // Strategy 3: Compound (Keyword + Industry Word)
-                    if(extras.length) {
-                        for(let i=0; i<3; i++) results.push(k + extras[Math.floor(Math.random()*extras.length)]);
-                    }
-                    
-                    // Strategy 4: Portmanteau (Simple Slice)
-                    if(extras.length) {
-                         const extra = extras[Math.floor(Math.random()*extras.length)];
-                         results.push(k.substring(0, 3) + extra.substring(1)); // e.g. Bro + ites
-                    }
+            modules.builder.renderList();
+            setTimeout(modules.builder.refresh, 500); // Delay for iframe load
+        },
 
-                    // Render
-                    const grid = document.getElementById('name-grid');
-                    grid.innerHTML = '';
-                    results.slice(0, 9).forEach(name => {
-                        const div = document.createElement('div');
-                        div.className = 'name-chip';
-                        div.innerHTML = `
-                            <strong>${name}</strong>
-                            <span class="avail-tag">Available</span>
-                        `;
-                        div.onclick = () => {
-                            state.profile.brandName = name;
-                            alert(`Brand name set to: ${name}. Updating website...`);
-                            modules.builder.refreshPreview();
-                        }
-                        grid.appendChild(div);
-                    });
+        saveProfile: () => {
+            store.profile.industry = document.getElementById('p-industry').value;
+            store.profile.keyword = document.getElementById('p-keyword').value;
+            store.profile.desc = document.getElementById('p-desc').value;
+            store.profile.audience = document.getElementById('p-audience').value;
+            store.profile.phone = document.getElementById('p-phone').value;
+            store.profile.email = document.getElementById('p-email').value;
+            
+            app.persist();
+            app.route('branding');
+        },
+
+        persist: () => {
+            localStorage.setItem('founderOS_v3', JSON.stringify(store));
+        },
+
+        route: (id) => {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${id}`).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Simple active state toggle based on onclick index (simplified)
+        }
+    };
+
+    // --- MODULES ---
+    const modules = {
+        
+        // 1. BRANDING (PHONETIC ENGINE)
+        branding: {
+            generate: () => {
+                const key = store.profile.keyword.replace(/[^a-zA-Z]/g, '') || "Nova";
+                const vowels = "aeiou";
+                const cons = "bcdfghjklmnpqrstvwxyz";
+                const list = [];
+                
+                // Helper: Random Char
+                const r = (str) => str[Math.floor(Math.random() * str.length)];
+                // Helper: Cap
+                const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+                // A. Abstract (CVCV pattern - Nike Style)
+                if(document.getElementById('style-abstract').checked) {
+                    for(let i=0; i<5; i++) {
+                        let name = r(cons) + r(vowels) + r(cons) + r(vowels);
+                        if(Math.random() > 0.5) name += r(cons); // 5 letters
+                        list.push({ name: cap(name), type: 'Abstract', domain: name.toLowerCase()+'.com' });
+                    }
+                }
+
+                // B. Compound (FaceBook Style)
+                if(document.getElementById('style-compound').checked) {
+                    const suffixes = ['Hub', 'Box', 'Lab', 'Base', 'Works', 'Flow', 'Deck'];
+                    const prefixes = ['Open', 'Go', 'Pro', 'Neo', 'Hyper', 'True'];
+                    for(let i=0; i<5; i++) {
+                        const s = suffixes[Math.floor(Math.random()*suffixes.length)];
+                        list.push({ name: cap(key) + s, type: 'Compound', domain: (key+s).toLowerCase()+'.com' });
+                    }
+                }
+
+                // C. Modern/Blends
+                if(document.getElementById('style-tech').checked) {
+                    const ends = ['ify', 'ly', 'io', 'ai', 'co'];
+                    for(let i=0; i<4; i++) {
+                        const end = ends[Math.floor(Math.random()*ends.length)];
+                        list.push({ name: cap(key) + end, type: 'Tech', domain: (key+end).toLowerCase()+'.com' });
+                    }
+                }
+
+                // Render
+                const container = document.getElementById('name-results');
+                container.innerHTML = '';
+                list.sort(() => Math.random() - 0.5).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'name-badge';
+                    div.innerHTML = `
+                        <h3>${item.name}</h3>
+                        <div class="name-meta">
+                            <span>${item.type}</span>
+                            <span><span class="avail-dot"></span>Available?</span>
+                        </div>
+                    `;
+                    div.onclick = () => {
+                        store.branding.selectedName = item.name;
+                        document.getElementById('current-brand-name').innerText = item.name;
+                        document.getElementById('selected-brand-display').style.display = 'block';
+                        document.querySelectorAll('.name-badge').forEach(b => b.classList.remove('selected'));
+                        div.classList.add('selected');
+                        app.persist();
+                        modules.builder.refresh(); // Update website
+                    };
+                    container.appendChild(div);
+                });
+            }
+        },
+
+        // 2. STRATEGY (ROADMAP)
+        strategy: {
+            run: () => {
+                const ind = store.profile.industry;
+                const roadmap = document.getElementById('roadmap-list');
+                const ideas = document.getElementById('idea-tips');
+                const comps = document.getElementById('competitor-list');
+                
+                // Generate Roadmap
+                let steps = [
+                    "Define your MVP (Minimum Viable Product).",
+                    "Secure social media handles for " + store.branding.selectedName,
+                    "Build landing page (Use the Builder tab).",
+                    "Set up Google Analytics & Search Console."
+                ];
+                
+                if(ind === 'food') {
+                    steps.push("Apply for FSSAI/Food License.");
+                    steps.push("Design packaging with eco-friendly materials.");
+                    steps.push("Partner with Swiggy/Zomato for initial reach.");
+                } else if (ind === 'service') {
+                    steps.push("Create a portfolio PDF.");
+                    steps.push("Set up a LinkedIn Company Page.");
+                    steps.push("List services on Upwork/Fiverr.");
+                }
+
+                roadmap.innerHTML = steps.map((s,i) => `
+                    <div style="display:flex; gap:10px; align-items:start; padding:10px; border-bottom:1px solid #eee;">
+                        <div style="background:var(--primary); color:white; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-size:0.8rem; flex-shrink:0;">${i+1}</div>
+                        <div>${s}</div>
+                    </div>
+                `).join('');
+
+                // Ideas
+                ideas.innerHTML = `
+                    <li><strong>Bundle Offer:</strong> Create a "Starter Pack" for new customers.</li>
+                    <li><strong>Content Marketing:</strong> Write about "${store.profile.keyword} benefits" on your blog.</li>
+                    <li><strong>Referral Program:</strong> Give 10% off if they bring a friend.</li>
+                `;
+
+                // Competitors (Simulated)
+                comps.innerHTML = `
+                    <p style="font-size:0.9rem; margin-bottom:5px;">Based on <strong>${store.profile.industry}</strong>:</p>
+                    <div style="background:#F1F5F9; padding:10px; border-radius:4px; margin-bottom:5px;"><strong>Big Market Leader:</strong> High price, generic service. Beat them with personalization.</div>
+                    <div style="background:#F1F5F9; padding:10px; border-radius:4px;"><strong>Local Player:</strong> Cheap, low quality. Beat them with branding & reliability.</div>
+                `;
+
+                document.getElementById('strategy-content').style.display = 'block';
+            }
+        },
+
+        // 3. PRO WEBSITE BUILDER
+        builder: {
+            // Add a section with default data
+            add: (type) => {
+                const id = 's' + Date.now();
+                let data = { id, type };
+                
+                if(type === 'hero') { data.title = "Transform Your Reality"; data.subtitle = "The best solution for " + store.profile.audience; data.btnText = "Get Started Now"; }
+                if(type === 'text') { data.content = "Write your engaging content here. You can add multiple paragraphs."; }
+                if(type === 'gallery') { data.title = "Our Gallery"; data.images = []; }
+                if(type === 'contact') { data.title = "Get in Touch"; data.showMap = true; data.whatsapp = true; }
+                if(type === 'features') { data.title = "Key Features"; data.items = ["Fast Delivery", "Premium Quality", "Eco-Friendly"]; }
+                if(type === 'cta') { data.title = "Ready to Order?"; data.btnText = "Buy Now"; }
+
+                store.builder.sections.push(data);
+                modules.builder.renderList();
+                modules.builder.refresh();
+            },
+
+            // Remove Section
+            remove: (id) => {
+                store.builder.sections = store.builder.sections.filter(s => s.id !== id);
+                modules.builder.renderList();
+                modules.builder.refresh();
+            },
+
+            // Move Up/Down
+            move: (id, dir) => {
+                const idx = store.builder.sections.findIndex(s => s.id === id);
+                if(idx < 0) return;
+                if(dir === -1 && idx > 0) {
+                    [store.builder.sections[idx], store.builder.sections[idx-1]] = [store.builder.sections[idx-1], store.builder.sections[idx]];
+                }
+                if(dir === 1 && idx < store.builder.sections.length - 1) {
+                    [store.builder.sections[idx], store.builder.sections[idx+1]] = [store.builder.sections[idx+1], store.builder.sections[idx]];
+                }
+                modules.builder.renderList();
+                modules.builder.refresh();
+            },
+
+            // Handle Input Changes in Sidebar
+            updateData: (id, field, value) => {
+                const section = store.builder.sections.find(s => s.id === id);
+                if(section) {
+                    section[field] = value;
+                    modules.builder.refresh(); // Live update
                 }
             },
 
-            // 2. STRATEGY MODULE
-            strategy: {
-                generate: () => {
-                    const ind = state.profile.industry;
-                    const key = state.profile.keyword;
+            // Image Upload Handler (Base64)
+            handleImageUpload: (id, input) => {
+                const section = store.builder.sections.find(s => s.id === id);
+                if(input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        section.images.push(e.target.result);
+                        modules.builder.refresh();
+                        modules.builder.renderList(); // Re-render to show image count/preview
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            },
 
-                    // Competitors Logic
-                    let comps = [];
-                    if(ind === 'food') comps = [
-                        {name: "The Big Chain", desc: "Mass produced, cheap, unhealthy."},
-                        {name: "The Fancy Organic", desc: "Overpriced, niche market."},
-                        {name: "Homemade Hero", desc: "Local seller, limited scale."}
-                    ];
-                    else if(ind === 'tech') comps = [
-                        {name: "Legacy Giant", desc: "Old features, hard to use, expensive."},
-                        {name: "Open Source", desc: "Free but hard to set up."},
-                        {name: "Niche Startup", desc: "Good UI but missing features."}
-                    ];
-                    else comps = [
-                        {name: "Established Player", desc: "High trust, high price."},
-                        {name: "Low Cost Option", desc: "Poor quality, fast service."}
-                    ];
-
-                    const compGrid = document.getElementById('comp-grid');
-                    compGrid.innerHTML = '';
-                    comps.forEach(c => {
-                        compGrid.innerHTML += `
-                            <div style="background:#f9fafb; padding:1rem; border-radius:8px;">
-                                <strong>${c.name}</strong>
-                                <p style="font-size:0.85rem; margin-top:0.5rem;">${c.desc}</p>
+            // Renders the Sidebar List of Sections
+            renderList: () => {
+                const container = document.getElementById('section-list-container');
+                container.innerHTML = '';
+                
+                store.builder.sections.forEach((s, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'section-item';
+                    
+                    // Specific Controls based on Type
+                    let controls = '';
+                    
+                    if(s.type === 'hero' || s.type === 'cta') {
+                        controls = `
+                            <div class="form-group"><label>Title</label><input type="text" value="${s.title}" oninput="modules.builder.updateData('${s.id}', 'title', this.value)"></div>
+                            <div class="form-group"><label>Button Text</label><input type="text" value="${s.btnText}" oninput="modules.builder.updateData('${s.id}', 'btnText', this.value)"></div>
+                        `;
+                    }
+                    else if (s.type === 'contact') {
+                        controls = `
+                            <div class="form-group"><label>Title</label><input type="text" value="${s.title}" oninput="modules.builder.updateData('${s.id}', 'title', this.value)"></div>
+                            <label><input type="checkbox" checked disabled> WhatsApp Integration (Uses Profile Phone)</label>
+                        `;
+                    }
+                    else if (s.type === 'gallery') {
+                        controls = `
+                            <div class="form-group"><label>Title</label><input type="text" value="${s.title}" oninput="modules.builder.updateData('${s.id}', 'title', this.value)"></div>
+                            <div class="form-group">
+                                <label>Add Image</label>
+                                <input type="file" accept="image/*" onchange="modules.builder.handleImageUpload('${s.id}', this)">
+                                <small style="color:blue;">${s.images.length} images added</small>
                             </div>
                         `;
-                    });
+                    }
+                    else {
+                        controls = `<div class="form-group"><label>Title/Content</label><input type="text" value="${s.title || ''}" oninput="modules.builder.updateData('${s.id}', 'title', this.value)"></div>`;
+                    }
 
-                    // SWOT Logic
-                    const s = document.getElementById('swot-s');
-                    const w = document.getElementById('swot-w');
-                    const o = document.getElementById('swot-o');
-                    const t = document.getElementById('swot-t');
-                    
-                    s.innerHTML = `<li>Your Unique USP: ${state.profile.usp}</li><li>Agile and modern approach</li><li>Personalized customer care</li>`;
-                    w.innerHTML = `<li>Limited initial brand recognition</li><li>Smaller budget than competitors</li><li>Resource constraints</li>`;
-                    o.innerHTML = `<li>Growing demand for ${key}</li><li>Digital marketing expansion</li><li>Partnerships with local vendors</li>`;
-                    t.innerHTML = `<li>Competitors copying your USP</li><li>Rising material costs</li><li>Platform dependency</li>`;
-
-                    document.getElementById('strategy-output').style.display = 'block';
-                }
+                    div.innerHTML = `
+                        <div class="section-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                            <span>${idx+1}. ${s.type.toUpperCase()}</span>
+                            <div onclick="event.stopPropagation()">
+                                <button class="btn-sm" onclick="modules.builder.move('${s.id}', -1)">↑</button>
+                                <button class="btn-sm" onclick="modules.builder.move('${s.id}', 1)">↓</button>
+                                <button class="btn-sm btn-danger" onclick="modules.builder.remove('${s.id}')">×</button>
+                            </div>
+                        </div>
+                        <div class="section-body">
+                            ${controls}
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
             },
 
-            // 3. WEBSITE BUILDER (The Beast)
-            builder: {
-                addSection: (type) => {
-                    const newId = Date.now().toString();
-                    let newSection = { id: newId, type: type };
-                    
-                    // Default Data
-                    if(type === 'hero') { newSection.title = "Transform Your Life"; newSection.subtitle = state.profile.desc || "We provide the best solution."; newSection.btn = "Get Started"; }
-                    if(type === 'features') { newSection.title = "Our Features"; newSection.items = ["Premium Quality", "24/7 Support", "Affordable Prices"]; }
-                    if(type === 'about') { newSection.title = "About Us"; newSection.text = `At ${state.profile.brandName}, we are dedicated to ${state.profile.usp}.`; }
-                    if(type === 'gallery') { newSection.title = "Gallery"; newSection.images = [1,2,3]; } // Placeholders
-                    if(type === 'cta') { newSection.title = "Ready to Start?"; newSection.btn = "Join Now"; }
-                    if(type === 'contact') { newSection.title = "Contact Us"; newSection.email = "hello@example.com"; }
+            // Apply Presets
+            applyTheme: () => {
+                const theme = document.getElementById('site-theme').value;
+                const colInput = document.getElementById('site-color');
+                const txtInput = document.getElementById('site-text-color');
 
-                    state.builder.sections.push(newSection);
-                    modules.builder.renderSectionList();
-                    modules.builder.refreshPreview();
-                },
+                if(theme === 'modern') { colInput.value = '#2563EB'; txtInput.value = '#0F172A'; }
+                if(theme === 'luxury') { colInput.value = '#000000'; txtInput.value = '#333333'; }
+                if(theme === 'playful') { colInput.value = '#F97316'; txtInput.value = '#431407'; }
+                if(theme === 'minimal') { colInput.value = '#525252'; txtInput.value = '#171717'; }
 
-                removeSection: (id) => {
-                    state.builder.sections = state.builder.sections.filter(s => s.id !== id);
-                    modules.builder.renderSectionList();
-                    modules.builder.refreshPreview();
-                },
+                modules.builder.refresh();
+            },
 
-                renderSectionList: () => {
-                    const list = document.getElementById('section-list');
-                    list.innerHTML = '';
-                    state.builder.sections.forEach((s, index) => {
-                        const div = document.createElement('div');
-                        div.className = 'block-card';
-                        div.innerHTML = `
-                            <span><strong>${index + 1}.</strong> ${s.type.toUpperCase()} - ${s.title.substring(0,15)}...</span>
-                            <button onclick="modules.builder.removeSection('${s.id}')" style="color:red; background:none; border:none; cursor:pointer;">&times;</button>
-                        `;
-                        list.appendChild(div);
-                    });
-                },
+            // Generate HTML & Render to Iframe
+            refresh: () => {
+                const brand = store.branding.selectedName;
+                const color = document.getElementById('site-color').value;
+                const textColor = document.getElementById('site-text-color').value;
+                const font = document.getElementById('site-theme').value === 'luxury' ? 'Playfair Display, serif' : 'Inter, sans-serif';
+                
+                let html = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <style>
+                            body { margin:0; font-family: ${font}; color: ${textColor}; line-height: 1.6; }
+                            .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+                            .btn { background: ${color}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; }
+                            h1, h2, h3 { line-height: 1.2; }
+                            .nav { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+                            .logo { color: ${color}; font-weight: 800; font-size: 1.5rem; text-decoration: none; }
+                            .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <nav class="nav">
+                            <a href="#" class="logo">${brand}</a>
+                            <a href="#contact" style="color:${textColor}; text-decoration:none;">Contact</a>
+                        </nav>
+                `;
 
-                // THE RENDER ENGINE
-                generateHTML: () => {
-                    const sectionsHTML = state.builder.sections.map(s => {
-                        // Templates
-                        if(s.type === 'hero') return `
-                            <section style="padding: 80px 20px; text-align: center; background: ${state.builder.color}; color: white;">
-                                <h1 style="font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2;">${s.title}</h1>
-                                <p style="font-size: 1.25rem; margin-bottom: 30px; opacity: 0.9;">${s.subtitle}</p>
-                                <a href="#" style="background: white; color: ${state.builder.color}; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">${s.btn}</a>
-                            </section>`;
-                        
-                        if(s.type === 'features') return `
-                            <section style="padding: 60px 20px; max-width: 1100px; margin: 0 auto;">
-                                <h2 style="text-align: center; margin-bottom: 40px; color: #333; font-size: 2rem;">${s.title}</h2>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-                                    ${s.items.map(i => `
-                                        <div style="padding: 30px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee;">
-                                            <h3 style="color: ${state.builder.color}; margin-bottom: 10px;">${i}</h3>
-                                            <p style="color: #666;">Experience the best with our top-tier service designed for you.</p>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </section>`;
-                        
-                        if(s.type === 'about') return `
-                            <section style="padding: 60px 20px; background: #f9fafb; display: flex; align-items: center; justify-content: center;">
-                                <div style="max-width: 800px; text-align: center;">
-                                    <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: #333;">${s.title}</h2>
-                                    <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">${s.text}</p>
-                                </div>
-                            </section>`;
+                store.builder.sections.forEach(s => {
+                    // HERO
+                    if(s.type === 'hero') {
+                        html += `
+                        <header style="text-align: center; padding: 80px 20px; background: ${color}10;">
+                            <h1 style="font-size: 3rem; margin-bottom: 10px;">${s.title}</h1>
+                            <p style="font-size: 1.2rem; opacity: 0.8; margin-bottom: 30px;">${s.subtitle}</p>
+                            <a href="#contact" class="btn">${s.btnText}</a>
+                        </header>`;
+                    }
+                    // FEATURES
+                    else if(s.type === 'features') {
+                        html += `
+                        <section class="container" style="padding: 60px 20px;">
+                            <h2 style="text-align: center; margin-bottom: 40px;">${s.title}</h2>
+                            <div class="grid-3">
+                                ${s.items.map(i => `<div style="padding:20px; border:1px solid #eee; border-radius:8px;"><h3>${i}</h3><p>Experience excellence.</p></div>`).join('')}
+                            </div>
+                        </section>`;
+                    }
+                    // GALLERY
+                    else if(s.type === 'gallery') {
+                        const imgs = s.images.length ? s.images.map(src => `<img src="${src}" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">`).join('') : '<p>No images uploaded yet.</p>';
+                        html += `
+                        <section class="container" style="text-align: center; padding: 60px 20px;">
+                            <h2>${s.title}</h2>
+                            <div class="grid-3">${imgs}</div>
+                        </section>`;
+                    }
+                    // CONTACT
+                    else if(s.type === 'contact') {
+                        const waLink = store.profile.phone ? `https://wa.me/${store.profile.phone.replace(/[^0-9]/g, '')}?text=Hi, I saw your website.` : '#';
+                        html += `
+                        <section id="contact" class="container" style="text-align: center; padding: 60px 20px; background: #f9f9f9;">
+                            <h2>${s.title}</h2>
+                            <p>Email: ${store.profile.email || 'Not provided'}</p>
+                            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                                <a href="tel:${store.profile.phone}" class="btn">📞 Call Us</a>
+                                <a href="${waLink}" class="btn" style="background:#25D366;">💬 WhatsApp</a>
+                            </div>
+                        </section>`;
+                    }
+                    // CTA
+                    else if(s.type === 'cta') {
+                        html += `
+                        <section style="text-align: center; padding: 80px 20px; background: ${color}; color: white;">
+                            <h2>${s.title}</h2>
+                            <a href="#contact" style="background: white; color: ${color}; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 20px; display: inline-block;">${s.btnText}</a>
+                        </section>`;
+                    }
+                });
 
-                        if(s.type === 'gallery') return `
-                            <section style="padding: 60px 20px;">
-                                <h2 style="text-align: center; margin-bottom: 40px;">${s.title}</h2>
-                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
-                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
-                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
-                                </div>
-                            </section>`;
+                html += `
+                    <footer style="text-align: center; padding: 40px; font-size: 0.8rem; opacity: 0.6; margin-top: 40px;">
+                        &copy; 2026 ${brand}. Built with FounderOS.
+                    </footer>
+                    </body></html>
+                `;
 
-                        if(s.type === 'cta') return `
-                            <section style="padding: 80px 20px; text-align: center; background: #111827; color: white;">
-                                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">${s.title}</h2>
-                                <a href="#" style="background: ${state.builder.color}; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem; display: inline-block;">${s.btn}</a>
-                            </section>`;
-                        
-                        if(s.type === 'contact') return `
-                            <section style="padding: 60px 20px; max-width: 600px; margin: 0 auto; text-align: center;">
-                                <h2>${s.title}</h2>
-                                <p>Email us at: <strong>${s.email}</strong></p>
-                                <form style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-                                    <input type="text" placeholder="Name" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <input type="email" placeholder="Email" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                                    <textarea rows="4" placeholder="Message" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
-                                    <button style="background: ${state.builder.color}; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">Send</button>
-                                </form>
-                            </section>`;
+                document.getElementById('preview-frame').srcdoc = html;
+                return html;
+            },
 
-                    }).join('');
-
-                    // Full Document Wrapper
-                    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${state.profile.brandName} - Official Site</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: ${state.builder.font}; line-height: 1.6; color: #1f2937; }
-        nav { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: ${state.builder.color}; text-decoration: none; }
-    </style>
-</head>
-<body>
-    <nav>
-        <a href="#" class="logo">${state.profile.brandName}</a>
-        <div>
-            <a href="#" style="color: #666; text-decoration: none; margin-left: 20px;">Home</a>
-            <a href="#" style="color: #666; text-decoration: none; margin-left: 20px;">Contact</a>
-        </div>
-    </nav>
-    ${sectionsHTML}
-    <footer style="padding: 40px; text-align: center; font-size: 0.9rem; color: #666; border-top: 1px solid #eee;">
-        &copy; ${new Date().getFullYear()} ${state.profile.brandName}. All rights reserved.
-    </footer>
-</body>
-</html>`;
-                },
-
-                refreshPreview: () => {
-                    state.builder.color = document.getElementById('site-color').value;
-                    state.builder.font = document.getElementById('site-font').value;
-                    
-                    const html = modules.builder.generateHTML();
-                    const iframe = document.getElementById('preview-frame');
-                    iframe.srcdoc = html;
-                },
-
-                exportSite: () => {
-                    const html = modules.builder.generateHTML();
-                    const blob = new Blob([html], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${state.profile.brandName.replace(/\s+/g, '-').toLowerCase()}-site.html`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                }
+            export: () => {
+                const html = modules.builder.refresh();
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${store.branding.selectedName}-website.html`;
+                a.click();
             }
-        };
+        }
+    };
 
-        // Initialize App
-        window.onload = app.init;
-
-    </script>
+    // Initialize
+    window.onload = app.init;
+</script>
 </body>
 </html>
