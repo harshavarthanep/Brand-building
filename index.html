@@ -3,462 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrandZero | The All-in-One Founder's Toolkit</title>
+    <title>LaunchPad Pro | The Founder's OS</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <style>
+        /* --- CORE VARIABLES --- */
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --secondary: #64748b;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --text: #0f172a;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --primary: #6366f1; /* Indigo 500 */
+            --primary-hover: #4f46e5;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --radius-sm: 6px;
+            --radius-lg: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; outline: none; }
+        body { margin: 0; padding: 0; font-family: var(--font-main); background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        body { background: var(--bg); color: var(--text); line-height: 1.6; display: flex; height: 100vh; overflow: hidden; }
-
-        /* Sidebar */
-        aside { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem; z-index: 10; }
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem; }
-        nav button {
-            width: 100%; text-align: left; padding: 0.75rem 1rem; border: none; background: none; 
-            color: var(--secondary); font-weight: 600; cursor: pointer; border-radius: var(--radius);
-            margin-bottom: 0.5rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem;
+        /* --- LAYOUT --- */
+        aside {
+            width: 280px; background: #ffffff; border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; z-index: 20;
         }
-        nav button:hover { background: #eff6ff; color: var(--primary); }
-        nav button.active { background: var(--primary); color: white; }
         
-        /* Main Content */
-        main { flex: 1; overflow-y: auto; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
-        
-        .section { display: none; animation: fadeIn 0.3s ease; }
-        .section.active { display: block; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        main { flex: 1; overflow-y: auto; position: relative; scroll-behavior: smooth; }
 
-        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-        p.subtitle { color: var(--secondary); margin-bottom: 2rem; }
+        /* --- SIDEBAR --- */
+        .brand-header { padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border); }
+        .brand-logo { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: grid; place-items: center; color: white; font-weight: bold; }
+        .brand-name { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; }
 
-        /* Forms & Inputs */
-        .card { background: var(--surface); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem; border: 1px solid var(--border); }
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--secondary); }
-        input, textarea, select {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;
-            font-size: 1rem; transition: border 0.2s;
+        .nav-links { padding: 1rem; flex: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem; border: none; background: transparent; color: var(--text-muted);
+            font-weight: 500; cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s;
+            text-align: left; font-size: 0.95rem;
         }
-        input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .nav-item:hover { background: #f9fafb; color: var(--primary); }
+        .nav-item.active { background: #eef2ff; color: var(--primary); font-weight: 600; }
+        .nav-item i { font-size: 1.2rem; }
+
+        /* --- CONTENT AREAS --- */
+        .view-section { display: none; padding: 2rem; max-width: 1400px; margin: 0 auto; animation: fadeUp 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-size: 1.875rem; font-weight: 700; margin: 0 0 0.5rem 0; letter-spacing: -0.025em; }
+        p.desc { color: var(--text-muted); margin-bottom: 2rem; max-width: 600px; line-height: 1.5; }
+
+        /* --- COMPONENTS --- */
+        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        
+        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: #374151; }
+        input, select, textarea {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            font-size: 0.95rem; transition: border 0.2s, box-shadow 0.2s; background: #fff;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
         
         .btn {
-            display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary); color: white;
-            border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 0.75rem 1.5rem; background: var(--primary); color: white; border: none;
+            border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: transform 0.1s, background 0.2s;
         }
-        .btn:hover { background: var(--primary-dark); }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-outline:hover { background: #eff6ff; }
+        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: #f9fafb; border-color: #d1d5db; }
+        .btn-danger { background: #fee2e2; color: #b91c1c; }
+        .btn-danger:hover { background: #fecaca; }
 
-        /* Name Generator Grid */
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-        .name-card {
-            background: var(--surface); border: 1px solid var(--border); padding: 1rem; border-radius: 8px;
-            display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s;
-        }
-        .name-card:hover { transform: translateY(-2px); border-color: var(--primary); }
-        .name-text { font-weight: 700; color: var(--text); }
-        .domain-status { font-size: 0.75rem; padding: 2px 6px; background: #ecfdf5; color: var(--success); border-radius: 4px; }
+        /* --- SPECIFIC: BUILDER UI --- */
+        .builder-container { display: flex; height: calc(100vh - 140px); gap: 1rem; }
+        .builder-controls { width: 320px; overflow-y: auto; padding-right: 0.5rem; }
+        .builder-preview { flex: 1; background: #e5e7eb; border-radius: var(--radius-lg); border: 4px solid #374151; position: relative; overflow: hidden; }
+        .preview-iframe { width: 100%; height: 100%; border: none; background: white; }
         
-        /* Website Builder Preview */
-        .preview-container { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem; margin-top: 1rem; background: #f1f5f9; min-height: 300px; }
-        pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; margin-top: 1rem; }
+        .control-group { background: white; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 1rem; overflow: hidden; }
+        .control-header { padding: 1rem; background: #f9fafb; border-bottom: 1px solid var(--border); font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .control-body { padding: 1rem; display: none; }
+        .control-body.open { display: block; }
+        
+        .block-card { 
+            padding: 0.75rem; border: 1px dashed var(--border); border-radius: var(--radius-sm); 
+            margin-bottom: 0.5rem; cursor: move; background: #fff; display: flex; align-items: center; justify-content: space-between;
+        }
+        .block-card:hover { border-color: var(--primary); background: #eef2ff; }
 
-        /* Utilities */
-        .tag { display: inline-block; background: #e0e7ff; color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; }
-        .flex { display: flex; gap: 1rem; }
-        .hidden { display: none; }
-
-        /* Mobile Responsive */
+        /* --- SPECIFIC: NAMES --- */
+        .name-chip {
+            background: white; border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius-sm);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .name-chip .avail-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #10b981; background: #ecfdf5; padding: 2px 6px; border-radius: 4px; }
+        
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: auto; }
-            aside { width: 100%; padding: 1rem; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); }
-            nav button { margin: 0 0.5rem 0 0; width: auto; white-space: nowrap; }
-            main { padding: 1rem; }
+            aside { width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 0.5rem; }
+            .nav-links { display: flex; overflow-x: auto; gap: 0.5rem; padding: 0; }
+            .nav-item { width: auto; white-space: nowrap; margin: 0; }
+            .builder-container { flex-direction: column; height: auto; }
+            .builder-controls { width: 100%; }
+            .builder-preview { height: 500px; }
         }
     </style>
 </head>
 <body>
 
-<aside>
-    <div class="brand">🚀 BrandZero</div>
-    <nav>
-        <button onclick="router('profile')" id="nav-profile" class="active">🏢 Business Profile</button>
-        <button onclick="router('names')" id="nav-names">💡 Name Generator</button>
-        <button onclick="router('strategy')" id="nav-strategy">📊 Strategy & PMF</button>
-        <button onclick="router('website')" id="nav-website">🌐 Website Builder</button>
-    </nav>
-</aside>
-
-<main>
-
-    <div id="section-profile" class="section active">
-        <h1>Define Your Vision</h1>
-        <p class="subtitle">Tell us about your business. This data powers the entire app.</p>
-
-        <div class="card">
-            <div class="form-group">
-                <label>Core Keyword (e.g., Brownie, Code, Design)</label>
-                <input type="text" id="biz-keyword" placeholder="e.g., Brownie">
-            </div>
-            <div class="form-group">
-                <label>Business Description</label>
-                <textarea id="biz-desc" rows="3" placeholder="e.g., Selling healthy kelveragu brownies with a modern twist."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Target Audience</label>
-                <input type="text" id="biz-audience" placeholder="e.g., Health-conscious millennials">
-            </div>
-            <div class="form-group">
-                <label>Unique Selling Proposition (USP)</label>
-                <input type="text" id="biz-usp" placeholder="e.g., Traditional ingredients, modern taste">
-            </div>
-            <button class="btn" onclick="saveProfile()">Save Profile & Continue</button>
+    <aside>
+        <div class="brand-header">
+            <div class="brand-logo">LP</div>
+            <div class="brand-name">LaunchPad</div>
         </div>
-    </div>
+        <nav class="nav-links">
+            <button class="nav-item active" onclick="app.router('profile')">
+                <i class="ph ph-user-circle"></i> Profile
+            </button>
+            <button class="nav-item" onclick="app.router('names')">
+                <i class="ph ph-lightbulb"></i> Branding
+            </button>
+            <button class="nav-item" onclick="app.router('strategy')">
+                <i class="ph ph-strategy"></i> Strategy
+            </button>
+            <button class="nav-item" onclick="app.router('builder')">
+                <i class="ph ph-monitor"></i> Web Builder
+            </button>
+        </nav>
+    </aside>
 
-    <div id="section-names" class="section">
-        <h1>Brand Name Generator</h1>
-        <p class="subtitle">Generate unique, brandable names and check domain availability instantly.</p>
+    <main>
         
-        <div class="card">
-            <div class="flex">
-                <button class="btn" onclick="generateNames()">Generate Ideas</button>
-                <button class="btn btn-outline" onclick="clearNames()">Clear</button>
-            </div>
-            <div id="name-results" class="results-grid">
-                </div>
-        </div>
-    </div>
-
-    <div id="section-strategy" class="section">
-        <h1>Strategy & Analysis</h1>
-        <p class="subtitle">Validate your idea and analyze the market fit.</p>
-
-        <div class="card">
-            <h2>🏆 Product Market Fit Calculator</h2>
-            <p style="font-size: 0.9rem; color: var(--secondary); margin-bottom: 1rem;">Answer honestly (1-10) to see if your idea is viable.</p>
+        <div id="view-profile" class="view-section active">
+            <h1>Business Identity</h1>
+            <p class="desc">Define the core DNA of your business. The AI engine uses this data to generate everything else.</p>
             
-            <div class="form-group">
-                <label>How urgent is the problem you are solving? (1 = Low, 10 = High)</label>
-                <input type="number" id="pmf-urgency" min="1" max="10" value="5">
-            </div>
-            <div class="form-group">
-                <label>How unique is your solution compared to competitors? (1 = Low, 10 = High)</label>
-                <input type="number" id="pmf-unique" min="1" max="10" value="5">
-            </div>
-            <div class="form-group">
-                <label>How easily can you reach your customers? (1 = Hard, 10 = Easy)</label>
-                <input type="number" id="pmf-access" min="1" max="10" value="5">
-            </div>
-            <button class="btn" onclick="calculatePMF()">Calculate Score</button>
-            
-            <div id="pmf-result" class="hidden" style="margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
-                <h3 id="pmf-score-display" style="color: #166534;"></h3>
-                <p id="pmf-advice" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🧠 Competitor Analysis Generator</h2>
-            <div id="comp-analysis-output">
-                <p style="color: var(--secondary);">Click generate to create a structure based on your profile.</p>
-            </div>
-            <button class="btn" style="margin-top:1rem;" onclick="generateStrategy()">Generate Strategy Brief</button>
-        </div>
-    </div>
-
-    <div id="section-website" class="section">
-        <h1>Instant Website Builder</h1>
-        <p class="subtitle">Generate a conversion-focused landing page code based on your brand.</p>
-
-        <div class="card">
-            <div class="flex">
-                <div class="form-group" style="flex:1">
-                    <label>Brand Name</label>
-                    <input type="text" id="web-brand-name" placeholder="Auto-filled from generator">
+            <div class="card">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Business Type / Industry</label>
+                        <select id="inp-industry" onchange="app.saveData()">
+                            <option value="food">Food & Beverage (Traditional/Modern)</option>
+                            <option value="tech">SaaS / Technology</option>
+                            <option value="service">Freelance Service / Agency</option>
+                            <option value="fashion">Fashion & Lifestyle</option>
+                            <option value="health">Health & Wellness</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Core Keyword (e.g., Brownie, Code, Yoga)</label>
+                        <input type="text" id="inp-keyword" placeholder="e.g., Brownie" oninput="app.saveData()">
+                    </div>
                 </div>
-                <div class="form-group" style="flex:1">
-                    <label>Primary Color</label>
-                    <input type="color" id="web-color" value="#2563eb" style="height: 45px; padding: 0.2rem;">
+                <br>
+                <div class="form-group">
+                    <label>Unique Selling Proposition (USP)</label>
+                    <input type="text" id="inp-usp" placeholder="e.g., Traditional Kelveragu made modern and healthy" oninput="app.saveData()">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label>Detailed Description</label>
+                    <textarea id="inp-desc" rows="4" placeholder="Describe your product, your goals, and your vibe..." oninput="app.saveData()"></textarea>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label>Target Audience</label>
+                    <input type="text" id="inp-audience" placeholder="e.g., Health conscious millennials in metro cities" oninput="app.saveData()">
                 </div>
             </div>
-            <button class="btn" onclick="generateWebsite()">Generate Code</button>
-        </div>
-
-        <div class="card">
-            <h2>Preview</h2>
-            <iframe id="web-preview" style="width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px;"></iframe>
             
-            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                <h2>Source Code</h2>
-                <button class="btn btn-outline" onclick="copyCode()">Copy Code</button>
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="btn" onclick="app.router('names')">Next: Branding <i class="ph ph-arrow-right"></i></button>
             </div>
-            <pre id="web-code">Click 'Generate Code' to see the HTML here.</pre>
         </div>
-    </div>
 
-</main>
+        <div id="view-names" class="view-section">
+            <h1>Identity Generator</h1>
+            <p class="desc">Smart phonetic mixing to create brandable names.</p>
 
-<script>
-    // --- STATE MANAGEMENT ---
-    const store = {
-        keyword: '',
-        desc: '',
-        audience: '',
-        usp: '',
-        selectedName: ''
-    };
+            <div class="card">
+                <div class="grid-2">
+                    <button class="btn" onclick="modules.names.generate()">Generate New Ideas</button>
+                    <div style="text-align: right; color: var(--text-muted); font-size: 0.9rem; align-self: center;">
+                        Click name to use in Website Builder
+                    </div>
+                </div>
+                <br>
+                <div class="grid-3" id="name-grid">
+                    </div>
+            </div>
+        </div>
 
-    // Load data on init
-    window.onload = () => {
-        if(localStorage.getItem('brandZeroData')) {
-            const data = JSON.parse(localStorage.getItem('brandZeroData'));
-            document.getElementById('biz-keyword').value = data.keyword || '';
-            document.getElementById('biz-desc').value = data.desc || '';
-            document.getElementById('biz-audience').value = data.audience || '';
-            document.getElementById('biz-usp').value = data.usp || '';
-            Object.assign(store, data);
-        }
-    };
+        <div id="view-strategy" class="view-section">
+            <h1>Strategic Analysis</h1>
+            <p class="desc">A simulated competitor analysis and SWOT framework based on your industry inputs.</p>
 
-    function saveProfile() {
-        store.keyword = document.getElementById('biz-keyword').value;
-        store.desc = document.getElementById('biz-desc').value;
-        store.audience = document.getElementById('biz-audience').value;
-        store.usp = document.getElementById('biz-usp').value;
-        
-        localStorage.setItem('brandZeroData', JSON.stringify(store));
-        alert('Profile Saved! You can now generate names and websites.');
-        router('names');
-    }
+            <button class="btn" onclick="modules.strategy.generate()">Run Analysis</button>
+            <br><br>
 
-    // --- ROUTER ---
-    function router(pageId) {
-        // Hide all sections
-        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
-        
-        // Show target
-        document.getElementById(`section-${pageId}`).classList.add('active');
-        document.getElementById(`nav-${pageId}`).classList.add('active');
-    }
+            <div id="strategy-output" style="display:none;">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;"><i class="ph ph-users"></i> Competitor Archetypes</h3>
+                    <p style="color:var(--text-muted); margin-bottom:1rem;">Based on your industry, these are your likely competitors:</p>
+                    <div class="grid-3" id="comp-grid"></div>
+                </div>
 
-    // --- NAME GENERATOR ENGINE ---
-    function generateNames() {
-        const keyword = store.keyword || 'Brand';
-        const cleanKey = keyword.replace(/\s/g, '');
-        
-        // Naming Patterns
-        const prefixes = ['Go', 'Get', 'The', 'My', 'We', 'Up', 'Pro', 'Neo', 'Zen', 'Hyper'];
-        const suffixes = ['ify', 'ly', 'hub', 'lab', 'box', 'io', 'hq', 'works', 'base', 'zone', 'mate', 'ster'];
-        const techWords = ['Sys', 'Net', 'Soft', 'Tech', 'Data', 'Cloud'];
-        const foodWords = ['Eats', 'Fresh', 'Pure', 'Tasty', 'Bites', 'Bowl'];
-        
-        let suggestions = [];
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #10b981;">
+                        <h3>Strengths (Internal)</h3>
+                        <ul id="swot-s" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #ef4444;">
+                        <h3>Weaknesses (Internal)</h3>
+                        <ul id="swot-w" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #3b82f6;">
+                        <h3>Opportunities (External)</h3>
+                        <ul id="swot-o" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #f59e0b;">
+                        <h3>Threats (External)</h3>
+                        <ul id="swot-t" style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.6;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // Pattern 1: Suffixes
-        suffixes.forEach(s => suggestions.push(cleanKey + s));
-        
-        // Pattern 2: Prefixes
-        prefixes.forEach(p => suggestions.push(p + cleanKey));
-        
-        // Pattern 3: Duplication/Rhyme
-        suggestions.push(cleanKey + cleanKey);
-        suggestions.push(cleanKey + 'O');
-        
-        // Pattern 4: Contextual (Simple logic)
-        if (store.desc.toLowerCase().includes('food') || store.desc.toLowerCase().includes('cook')) {
-            foodWords.forEach(w => suggestions.push(cleanKey + w));
-            foodWords.forEach(w => suggestions.push(w + cleanKey));
-        } else {
-            techWords.forEach(w => suggestions.push(cleanKey + w));
-        }
-
-        // Shuffle and Slice
-        suggestions = suggestions.sort(() => 0.5 - Math.random()).slice(0, 12);
-
-        // Render
-        const container = document.getElementById('name-results');
-        container.innerHTML = '';
-        
-        suggestions.forEach(name => {
-            const div = document.createElement('div');
-            div.className = 'name-card';
-            div.innerHTML = `
+        <div id="view-builder" class="view-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <div>
-                    <div class="name-text">${name}</div>
-                    <div style="font-size:0.75rem; color:#64748b;">${name.toLowerCase()}.com</div>
+                    <h1>Website Builder</h1>
+                    <p class="desc" style="margin:0;">Drag & drop components. Live Preview. Export HTML.</p>
                 </div>
-                <a href="https://www.namecheap.com/domains/registration/results/?domain=${name}.com" target="_blank" class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Check Avail</a>
-            `;
-            // Add click listener to set name for website builder
-            div.onclick = (e) => {
-                if(e.target.tagName !== 'A') {
-                    store.selectedName = name;
-                    document.getElementById('web-brand-name').value = name;
-                    alert(`Selected "${name}" for Website Builder.`);
-                }
-            };
-            container.appendChild(div);
-        });
-    }
-
-    function clearNames() {
-        document.getElementById('name-results').innerHTML = '';
-    }
-
-    // --- STRATEGY ENGINE ---
-    function calculatePMF() {
-        const u = parseInt(document.getElementById('pmf-urgency').value);
-        const un = parseInt(document.getElementById('pmf-unique').value);
-        const a = parseInt(document.getElementById('pmf-access').value);
-        
-        const score = u + un + a;
-        const max = 30;
-        const percentage = Math.round((score / max) * 100);
-        
-        const display = document.getElementById('pmf-score-display');
-        const advice = document.getElementById('pmf-advice');
-        const resultBox = document.getElementById('pmf-result');
-        
-        display.innerText = `Score: ${percentage}% (${score}/30)`;
-        resultBox.classList.remove('hidden');
-
-        if (percentage > 75) {
-            advice.innerText = "🚀 Great potential! High urgency and uniqueness. Focus on execution.";
-            resultBox.style.borderColor = "#bbf7d0";
-            resultBox.style.background = "#f0fdf4";
-        } else if (percentage > 50) {
-            advice.innerText = "⚠️ Moderate potential. Review your uniqueness or how you plan to reach customers.";
-            resultBox.style.borderColor = "#fde047";
-            resultBox.style.background = "#fefce8";
-        } else {
-            advice.innerText = "🛑 High Risk. The problem might not be urgent enough or the market is too crowded.";
-            resultBox.style.borderColor = "#fca5a5";
-            resultBox.style.background = "#fef2f2";
-        }
-    }
-
-    function generateStrategy() {
-        const div = document.getElementById('comp-analysis-output');
-        div.innerHTML = `
-            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border: 1px solid #e2e8f0; font-family: monospace;">
-                <strong>STRATEGY BRIEF FOR: ${store.keyword || 'YOUR BUSINESS'}</strong><br><br>
-                1. <strong>Value Proposition:</strong> ${store.usp || 'N/A'} <br>
-                2. <strong>Target Customer:</strong> ${store.audience || 'N/A'} <br>
-                3. <strong>SEO Keywords:</strong> ${store.keyword}, buy ${store.keyword}, best ${store.keyword}, ${store.keyword} online.<br>
-                4. <strong>Content Strategy:</strong><br>
-                   - Blog: "Top 5 benefits of ${store.keyword}"<br>
-                   - Social: Behind the scenes of making ${store.keyword}<br>
-                   - Video: How to choose the best ${store.keyword}<br>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="modules.builder.refreshPreview()"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
+                    <button class="btn" onclick="modules.builder.exportSite()"><i class="ph ph-download-simple"></i> Export Website</button>
+                </div>
             </div>
-        `;
-    }
 
-    // --- WEBSITE BUILDER ENGINE ---
-    function generateWebsite() {
-        const brand = document.getElementById('web-brand-name').value || store.keyword || 'MyBrand';
-        const color = document.getElementById('web-color').value;
-        const desc = store.desc || "We provide the best services for you.";
-        const usp = store.usp || "Quality guaranteed.";
-        
-        // A simple, responsive landing page template
-        const template = `
+            <div class="builder-container">
+                <div class="builder-controls">
+                    
+                    <div class="control-group">
+                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                            🎨 Theme & Colors <i class="ph ph-caret-down"></i>
+                        </div>
+                        <div class="control-body open">
+                            <label>Primary Color</label>
+                            <input type="color" id="site-color" value="#4f46e5" style="height: 40px; margin-bottom: 1rem;" onchange="modules.builder.refreshPreview()">
+                            
+                            <label>Font Style</label>
+                            <select id="site-font" onchange="modules.builder.refreshPreview()">
+                                <option value="'Inter', sans-serif">Modern (Inter)</option>
+                                <option value="'Playfair Display', serif">Elegant (Serif)</option>
+                                <option value="'Courier New', monospace">Tech (Monospace)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                            ➕ Add Section <i class="ph ph-caret-down"></i>
+                        </div>
+                        <div class="control-body open">
+                            <div style="display: grid; gap: 0.5rem;">
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('hero')">Hero Header</button>
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('features')">Features Grid</button>
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('about')">About Us</button>
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('gallery')">Gallery</button>
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('cta')">Call to Action</button>
+                                <button class="btn btn-secondary" onclick="modules.builder.addSection('contact')">Contact Form</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                            📝 Manage Content <i class="ph ph-caret-down"></i>
+                        </div>
+                        <div class="control-body open" id="section-list">
+                            </div>
+                    </div>
+
+                </div>
+
+                <div class="builder-preview">
+                    <iframe id="preview-frame" class="preview-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- CORE STATE ---
+        const state = {
+            profile: {
+                industry: 'food',
+                keyword: '',
+                usp: '',
+                desc: '',
+                audience: '',
+                brandName: 'MyBrand'
+            },
+            builder: {
+                color: '#4f46e5',
+                font: "'Inter', sans-serif",
+                sections: [
+                    { id: '1', type: 'hero', title: 'Welcome to Future', subtitle: 'The best products for you.', btn: 'Get Started' },
+                    { id: '2', type: 'features', title: 'Why Choose Us?', items: ['Quality', 'Speed', 'Support'] }
+                ]
+            }
+        };
+
+        // --- APP CONTROLLER ---
+        const app = {
+            init: () => {
+                // Load from local storage
+                const saved = localStorage.getItem('launchPadData');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state.profile = parsed.profile || state.profile;
+                    state.builder = parsed.builder || state.builder;
+                }
+                
+                // Populate inputs
+                document.getElementById('inp-industry').value = state.profile.industry;
+                document.getElementById('inp-keyword').value = state.profile.keyword;
+                document.getElementById('inp-usp').value = state.profile.usp;
+                document.getElementById('inp-desc').value = state.profile.desc;
+                document.getElementById('inp-audience').value = state.profile.audience;
+
+                // Initial render
+                modules.builder.renderSectionList();
+                modules.builder.refreshPreview();
+            },
+
+            router: (viewId) => {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                
+                document.getElementById(`view-${viewId}`).classList.add('active');
+                // Highlight button logic would go here if strict index tracking needed
+            },
+
+            saveData: () => {
+                state.profile.industry = document.getElementById('inp-industry').value;
+                state.profile.keyword = document.getElementById('inp-keyword').value;
+                state.profile.usp = document.getElementById('inp-usp').value;
+                state.profile.desc = document.getElementById('inp-desc').value;
+                state.profile.audience = document.getElementById('inp-audience').value;
+                
+                localStorage.setItem('launchPadData', JSON.stringify(state));
+                // Update preview if builder is visible
+                modules.builder.refreshPreview();
+            }
+        };
+
+        // --- MODULES ---
+        const modules = {
+            
+            // 1. BRANDING MODULE
+            names: {
+                generate: () => {
+                    const k = state.profile.keyword.replace(/\s/g, '') || "Brand";
+                    const industry = state.profile.industry;
+                    
+                    const prefixes = ['The', 'My', 'Go', 'Up', 'Neo', 'Pro', 'Zen', 'Nova', 'Hyper'];
+                    const suffixes = ['ify', 'ly', 'hub', 'lab', 'box', 'io', 'hq', 'works', 'base'];
+                    
+                    // Industry specific logic
+                    let extras = [];
+                    if(industry === 'food') extras = ['Eats', 'Bites', 'Kitchen', 'Table', 'Bowl', 'Fresh', 'Pure'];
+                    if(industry === 'tech') extras = ['Sys', 'Net', 'Soft', 'Data', 'Code', 'Stack', 'Flow'];
+                    if(industry === 'fashion') extras = ['Style', 'Wear', 'Look', 'Mode', 'Vogue', 'Thread'];
+                    
+                    let results = [];
+
+                    // Strategy 1: Suffix
+                    for(let i=0; i<3; i++) results.push(k + suffixes[Math.floor(Math.random()*suffixes.length)]);
+                    
+                    // Strategy 2: Prefix
+                    for(let i=0; i<3; i++) results.push(prefixes[Math.floor(Math.random()*prefixes.length)] + k);
+                    
+                    // Strategy 3: Compound (Keyword + Industry Word)
+                    if(extras.length) {
+                        for(let i=0; i<3; i++) results.push(k + extras[Math.floor(Math.random()*extras.length)]);
+                    }
+                    
+                    // Strategy 4: Portmanteau (Simple Slice)
+                    if(extras.length) {
+                         const extra = extras[Math.floor(Math.random()*extras.length)];
+                         results.push(k.substring(0, 3) + extra.substring(1)); // e.g. Bro + ites
+                    }
+
+                    // Render
+                    const grid = document.getElementById('name-grid');
+                    grid.innerHTML = '';
+                    results.slice(0, 9).forEach(name => {
+                        const div = document.createElement('div');
+                        div.className = 'name-chip';
+                        div.innerHTML = `
+                            <strong>${name}</strong>
+                            <span class="avail-tag">Available</span>
+                        `;
+                        div.onclick = () => {
+                            state.profile.brandName = name;
+                            alert(`Brand name set to: ${name}. Updating website...`);
+                            modules.builder.refreshPreview();
+                        }
+                        grid.appendChild(div);
+                    });
+                }
+            },
+
+            // 2. STRATEGY MODULE
+            strategy: {
+                generate: () => {
+                    const ind = state.profile.industry;
+                    const key = state.profile.keyword;
+
+                    // Competitors Logic
+                    let comps = [];
+                    if(ind === 'food') comps = [
+                        {name: "The Big Chain", desc: "Mass produced, cheap, unhealthy."},
+                        {name: "The Fancy Organic", desc: "Overpriced, niche market."},
+                        {name: "Homemade Hero", desc: "Local seller, limited scale."}
+                    ];
+                    else if(ind === 'tech') comps = [
+                        {name: "Legacy Giant", desc: "Old features, hard to use, expensive."},
+                        {name: "Open Source", desc: "Free but hard to set up."},
+                        {name: "Niche Startup", desc: "Good UI but missing features."}
+                    ];
+                    else comps = [
+                        {name: "Established Player", desc: "High trust, high price."},
+                        {name: "Low Cost Option", desc: "Poor quality, fast service."}
+                    ];
+
+                    const compGrid = document.getElementById('comp-grid');
+                    compGrid.innerHTML = '';
+                    comps.forEach(c => {
+                        compGrid.innerHTML += `
+                            <div style="background:#f9fafb; padding:1rem; border-radius:8px;">
+                                <strong>${c.name}</strong>
+                                <p style="font-size:0.85rem; margin-top:0.5rem;">${c.desc}</p>
+                            </div>
+                        `;
+                    });
+
+                    // SWOT Logic
+                    const s = document.getElementById('swot-s');
+                    const w = document.getElementById('swot-w');
+                    const o = document.getElementById('swot-o');
+                    const t = document.getElementById('swot-t');
+                    
+                    s.innerHTML = `<li>Your Unique USP: ${state.profile.usp}</li><li>Agile and modern approach</li><li>Personalized customer care</li>`;
+                    w.innerHTML = `<li>Limited initial brand recognition</li><li>Smaller budget than competitors</li><li>Resource constraints</li>`;
+                    o.innerHTML = `<li>Growing demand for ${key}</li><li>Digital marketing expansion</li><li>Partnerships with local vendors</li>`;
+                    t.innerHTML = `<li>Competitors copying your USP</li><li>Rising material costs</li><li>Platform dependency</li>`;
+
+                    document.getElementById('strategy-output').style.display = 'block';
+                }
+            },
+
+            // 3. WEBSITE BUILDER (The Beast)
+            builder: {
+                addSection: (type) => {
+                    const newId = Date.now().toString();
+                    let newSection = { id: newId, type: type };
+                    
+                    // Default Data
+                    if(type === 'hero') { newSection.title = "Transform Your Life"; newSection.subtitle = state.profile.desc || "We provide the best solution."; newSection.btn = "Get Started"; }
+                    if(type === 'features') { newSection.title = "Our Features"; newSection.items = ["Premium Quality", "24/7 Support", "Affordable Prices"]; }
+                    if(type === 'about') { newSection.title = "About Us"; newSection.text = `At ${state.profile.brandName}, we are dedicated to ${state.profile.usp}.`; }
+                    if(type === 'gallery') { newSection.title = "Gallery"; newSection.images = [1,2,3]; } // Placeholders
+                    if(type === 'cta') { newSection.title = "Ready to Start?"; newSection.btn = "Join Now"; }
+                    if(type === 'contact') { newSection.title = "Contact Us"; newSection.email = "hello@example.com"; }
+
+                    state.builder.sections.push(newSection);
+                    modules.builder.renderSectionList();
+                    modules.builder.refreshPreview();
+                },
+
+                removeSection: (id) => {
+                    state.builder.sections = state.builder.sections.filter(s => s.id !== id);
+                    modules.builder.renderSectionList();
+                    modules.builder.refreshPreview();
+                },
+
+                renderSectionList: () => {
+                    const list = document.getElementById('section-list');
+                    list.innerHTML = '';
+                    state.builder.sections.forEach((s, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'block-card';
+                        div.innerHTML = `
+                            <span><strong>${index + 1}.</strong> ${s.type.toUpperCase()} - ${s.title.substring(0,15)}...</span>
+                            <button onclick="modules.builder.removeSection('${s.id}')" style="color:red; background:none; border:none; cursor:pointer;">&times;</button>
+                        `;
+                        list.appendChild(div);
+                    });
+                },
+
+                // THE RENDER ENGINE
+                generateHTML: () => {
+                    const sectionsHTML = state.builder.sections.map(s => {
+                        // Templates
+                        if(s.type === 'hero') return `
+                            <section style="padding: 80px 20px; text-align: center; background: ${state.builder.color}; color: white;">
+                                <h1 style="font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2;">${s.title}</h1>
+                                <p style="font-size: 1.25rem; margin-bottom: 30px; opacity: 0.9;">${s.subtitle}</p>
+                                <a href="#" style="background: white; color: ${state.builder.color}; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">${s.btn}</a>
+                            </section>`;
+                        
+                        if(s.type === 'features') return `
+                            <section style="padding: 60px 20px; max-width: 1100px; margin: 0 auto;">
+                                <h2 style="text-align: center; margin-bottom: 40px; color: #333; font-size: 2rem;">${s.title}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                                    ${s.items.map(i => `
+                                        <div style="padding: 30px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee;">
+                                            <h3 style="color: ${state.builder.color}; margin-bottom: 10px;">${i}</h3>
+                                            <p style="color: #666;">Experience the best with our top-tier service designed for you.</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </section>`;
+                        
+                        if(s.type === 'about') return `
+                            <section style="padding: 60px 20px; background: #f9fafb; display: flex; align-items: center; justify-content: center;">
+                                <div style="max-width: 800px; text-align: center;">
+                                    <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: #333;">${s.title}</h2>
+                                    <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">${s.text}</p>
+                                </div>
+                            </section>`;
+
+                        if(s.type === 'gallery') return `
+                            <section style="padding: 60px 20px;">
+                                <h2 style="text-align: center; margin-bottom: 40px;">${s.title}</h2>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
+                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
+                                    <img src="https://placehold.co/400x300/EEE/31343C" style="width:100%; border-radius:8px;">
+                                </div>
+                            </section>`;
+
+                        if(s.type === 'cta') return `
+                            <section style="padding: 80px 20px; text-align: center; background: #111827; color: white;">
+                                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">${s.title}</h2>
+                                <a href="#" style="background: ${state.builder.color}; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem; display: inline-block;">${s.btn}</a>
+                            </section>`;
+                        
+                        if(s.type === 'contact') return `
+                            <section style="padding: 60px 20px; max-width: 600px; margin: 0 auto; text-align: center;">
+                                <h2>${s.title}</h2>
+                                <p>Email us at: <strong>${s.email}</strong></p>
+                                <form style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                                    <input type="text" placeholder="Name" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <input type="email" placeholder="Email" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <textarea rows="4" placeholder="Message" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                                    <button style="background: ${state.builder.color}; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">Send</button>
+                                </form>
+                            </section>`;
+
+                    }).join('');
+
+                    // Full Document Wrapper
+                    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${brand} | Official Site</title>
+    <title>${state.profile.brandName} - Official Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; font-family: sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        header { background: white; padding: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: ${color}; text-decoration: none; }
-        .hero { background: ${color}; color: white; padding: 100px 0; text-align: center; }
-        .hero h1 { font-size: 3rem; margin-bottom: 20px; }
-        .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 600px; margin: 0 auto 30px; }
-        .btn { background: white; color: ${color}; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; }
-        .features { padding: 80px 0; background: #f9f9f9; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
-        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        footer { background: #333; color: white; padding: 40px 0; text-align: center; margin-top: auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: ${state.builder.font}; line-height: 1.6; color: #1f2937; }
+        nav { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        .logo { font-weight: 800; font-size: 1.5rem; color: ${state.builder.color}; text-decoration: none; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
-                <a href="#" class="logo">${brand}</a>
-                <a href="#contact" style="color: #333; text-decoration: none;">Contact</a>
-            </nav>
+    <nav>
+        <a href="#" class="logo">${state.profile.brandName}</a>
+        <div>
+            <a href="#" style="color: #666; text-decoration: none; margin-left: 20px;">Home</a>
+            <a href="#" style="color: #666; text-decoration: none; margin-left: 20px;">Contact</a>
         </div>
-    </header>
-
-    <section class="hero">
-        <div class="container">
-            <h1>The Best ${store.keyword || 'Solution'} For You</h1>
-            <p>${desc}</p>
-            <a href="#contact" class="btn">Get Started</a>
-        </div>
-    </section>
-
-    <section class="features">
-        <div class="container">
-            <div class="grid">
-                <div class="card">
-                    <h3>✅ ${usp}</h3>
-                    <p>We ensure you get exactly what you need with our unique approach.</p>
-                </div>
-                <div class="card">
-                    <h3>🚀 Fast & Reliable</h3>
-                    <p>Built for speed and efficiency, perfectly tailored for ${store.audience || 'you'}.</p>
-                </div>
-                <div class="card">
-                    <h3>💎 Premium Quality</h3>
-                    <p>We never compromise on quality. Satisfaction guaranteed.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 ${brand}. All rights reserved.</p>
-        </div>
+    </nav>
+    ${sectionsHTML}
+    <footer style="padding: 40px; text-align: center; font-size: 0.9rem; color: #666; border-top: 1px solid #eee;">
+        &copy; ${new Date().getFullYear()} ${state.profile.brandName}. All rights reserved.
     </footer>
 </body>
 </html>`;
+                },
 
-        // Render to Code Block
-        document.getElementById('web-code').innerText = template.trim();
-        
-        // Render to Iframe
-        const iframe = document.getElementById('web-preview');
-        iframe.srcdoc = template;
-    }
+                refreshPreview: () => {
+                    state.builder.color = document.getElementById('site-color').value;
+                    state.builder.font = document.getElementById('site-font').value;
+                    
+                    const html = modules.builder.generateHTML();
+                    const iframe = document.getElementById('preview-frame');
+                    iframe.srcdoc = html;
+                },
 
-    function copyCode() {
-        const code = document.getElementById('web-code').innerText;
-        navigator.clipboard.writeText(code).then(() => {
-            alert("Code copied to clipboard! You can now create an index.html file with this.");
-        });
-    }
-</script>
+                exportSite: () => {
+                    const html = modules.builder.generateHTML();
+                    const blob = new Blob([html], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${state.profile.brandName.replace(/\s+/g, '-').toLowerCase()}-site.html`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+            }
+        };
 
+        // Initialize App
+        window.onload = app.init;
+
+    </script>
 </body>
 </html>
