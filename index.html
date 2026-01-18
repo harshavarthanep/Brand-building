@@ -31,7 +31,7 @@
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-main); height: 100vh; display: flex; overflow: hidden; font-size: 14px; letter-spacing: -0.01em; }
 
-        /* --- DESKTOP LAYOUT --- */
+        /* --- LAYOUT --- */
         aside { 
             width: var(--nav-w); background: var(--bg); border-right: 1px solid var(--border); 
             display: flex; flex-direction: column; z-index: 50; flex-shrink: 0; 
@@ -107,11 +107,11 @@
 
         /* --- MODULE: STRATEGY CANVAS --- */
         .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-        .canvas-cell { background: var(--surface); padding: 20px; min-height: 160px; display: flex; flex-direction: column; }
+        .canvas-cell { background: var(--surface); padding: 20px; min-height: 180px; display: flex; flex-direction: column; }
         .canvas-title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: block; letter-spacing: 0.05em; }
         .canvas-content { font-size: 13px; line-height: 1.6; color: var(--text); }
         .canvas-content ul { padding-left: 16px; margin: 0; }
-        .canvas-content li { margin-bottom: 6px; }
+        .canvas-content li { margin-bottom: 8px; }
 
         /* --- ANIMATIONS --- */
         .view { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -191,7 +191,7 @@
         <div style="font-weight:700; color:var(--primary); font-size:16px; display:flex; align-items:center; gap:8px;">
             <i class="ph-fill ph-infinity"></i> BrandZen
         </div>
-        <div style="font-size:10px; color:var(--text-muted);">v15.0</div>
+        <div style="font-size:10px; color:var(--text-muted);">v16.0</div>
     </div>
 
     <main>
@@ -241,14 +241,14 @@
 
             <div id="view-names" class="view">
                 <span class="mono">02 / Identity</span>
-                <h1>Semantic Naming Engine</h1>
-                <p class="desc">Generates true semantic blends and evocative pairings.</p>
+                <h1>Fusion Naming Engine</h1>
+                <p class="desc">Smart Fusion (Portmanteau) creates unique brands by fusing syllables.</p>
                 
                 <div class="grid-2">
                     <div class="card">
                         <label>Topology</label>
                         <select id="inp-nametype">
-                            <option value="smart">Smart Blend (Portmanteau)</option>
+                            <option value="smart">Smart Fusion (Blended)</option>
                             <option value="two">Premium Two-Word</option>
                             <option value="tech">Abstract (Neologisms)</option>
                         </select>
@@ -269,7 +269,7 @@
             <div id="view-canvas" class="view">
                 <span class="mono">03 / Blueprint</span>
                 <h1>Deep Strategy Canvas</h1>
-                <p class="desc">A multi-point consultant report based on specific industry vectors.</p>
+                <p class="desc">Generates actionable, multi-point strategies based on your industry and audience.</p>
                 
                 <button class="btn" id="btn-gen-canvas" onclick="Modules.Canvas.generate()" style="margin-bottom:20px;">Generate Deep Analysis</button>
 
@@ -331,8 +331,8 @@
         /* --- APP CORE --- */
         const App = {
             init: () => {
-                if(localStorage.getItem('brandZen_v15')) {
-                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v15')));
+                if(localStorage.getItem('brandZen_v16')) {
+                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v16')));
                     document.getElementById('inp-ind').value = State.industry;
                     document.getElementById('inp-key').value = State.keyword;
                     document.getElementById('inp-desc').value = State.desc;
@@ -348,7 +348,7 @@
                 State.keyword = document.getElementById('inp-key').value;
                 State.desc = document.getElementById('inp-desc').value;
                 State.persona = document.getElementById('inp-persona').value;
-                localStorage.setItem('brandZen_v15', JSON.stringify(State));
+                localStorage.setItem('brandZen_v16', JSON.stringify(State));
                 App.route('names');
             },
             route: (id) => {
@@ -369,7 +369,7 @@
         /* --- MODULES --- */
         const Modules = {
             
-            // 1. NAMING ENGINE (Restored Portmanteau Logic)
+            // 1. ADVANCED NAMING ENGINE
             Naming: {
                 generate: () => {
                     const ind = State.industry;
@@ -379,70 +379,90 @@
                     const grid = document.getElementById('name-grid');
                     grid.innerHTML = '';
                     
+                    const desc = State.desc.toLowerCase();
+                    const isHealthy = desc.includes('health') || desc.includes('diet');
+                    
                     // --- DICTIONARIES ---
-                    // "Smart" Roots (for blending)
-                    const smartRoots = {
-                        food: ['Gusto', 'Savor', 'Bite', 'Chef', 'Crave', 'Dish', 'Pantry', 'Root', 'Leaf'],
-                        tech: ['Sync', 'Node', 'Data', 'Flow', 'Grid', 'Soft', 'Logic', 'Hyper', 'Link'],
-                        fashion: ['Vogue', 'Moda', 'Silk', 'Wear', 'Aura', 'Luxe', 'Style', 'Drape'],
-                        health: ['Vita', 'Pure', 'Zen', 'Bio', 'Lean', 'Pulse', 'Heal', 'Life']
+                    const smartSuffixes = {
+                        food: ['est', 'vor', 'ous', 'en', 'ia', 'os'], // Harvest -> est, Savor -> vor
+                        tech: ['sys', 'iq', 'os', 'on', 'ex'],
+                        health: ['al', 'pure', 'gen', 'io']
+                    };
+                    const smartPrefixes = {
+                        food: ['Nutri', 'Vita', 'Gus', 'Bon', 'Culi'],
+                        tech: ['Syn', 'Dat', 'Net', 'Nov', 'Vel'],
+                        health: ['Viv', 'Cur', 'San', 'Zen']
                     };
                     
-                    // "Two Word" Adjectives (Premium)
-                    const adjectives = {
-                        food: ['Urban', 'Golden', 'Daily', 'True', 'Wild', 'Honest', 'Prime', 'Secret'],
-                        tech: ['Iron', 'Hyper', 'Neon', 'Meta', 'Prime', 'Smart', 'Next', 'Blue'],
-                        fashion: ['Velvet', 'Noir', 'Iconic', 'Bold', 'Rare', 'Chic', 'Modern'],
-                        health: ['Vital', 'Inner', 'Calm', 'Clean', 'Whole', 'Active']
+                    const adjs = {
+                        food: ['Urban', 'Golden', 'Daily', 'True', 'Wild', 'Honest', 'Prime'],
+                        tech: ['Iron', 'Hyper', 'Neon', 'Meta', 'Prime', 'Smart', 'Next'],
+                        fashion: ['Velvet', 'Noir', 'Iconic', 'Bold', 'Rare'],
+                        health: ['Vital', 'Inner', 'Calm', 'Clean']
                     };
 
-                    // "Abstract" Syllables
                     const sylls = {
                         start: ['Vel', 'Nov', 'Syn', 'Aero', 'Lumi', 'Omni', 'Zen', 'Arc', 'Kuno'],
                         mid: ['or', 'ia', 'ex', 'os', 'is', 'a'],
                         end: ['ra', 'on', 'ix', 'us', 'io', 'fy']
                     };
 
-                    const rootsList = smartRoots[ind] || smartRoots.tech;
-                    const adjsList = adjectives[ind] || adjectives.tech;
-                    
                     const seen = new Set();
                     let names = [];
                     let attempts = 0;
 
-                    // --- BLEND LOGIC (Splicing) ---
-                    // Example: "Brownie" + "Vita" -> "Brownita"
-                    const spliceWord = (w1, w2) => {
-                        const start = w1.substring(0, Math.ceil(w1.length * 0.6)); // First 60%
-                        const end = w2.substring(Math.floor(w2.length * 0.4));     // Last 60%
-                        return start + end.toLowerCase();
+                    // --- TRUE BLENDING LOGIC ---
+                    const fuse = (prefix, word) => prefix + word.toLowerCase();
+                    const blend = (word, suffix) => {
+                        // Cut word at 3 chars
+                        return word.substring(0, 3) + suffix;
                     };
 
                     while(names.length < 9 && attempts < 50) {
                         attempts++;
                         let n = "";
-                        const r = rootsList[Math.floor(Math.random()*rootsList.length)];
                         
                         if(type === 'two') {
-                            // Two Words: "Urban Brownie"
-                            const adj = adjsList[Math.floor(Math.random()*adjsList.length)];
-                            // 50% chance keyword is first or second
+                            // Premium Two Words
+                            const list = adjs[ind] || adjs.tech;
+                            const adj = list[Math.floor(Math.random()*list.length)];
                             if(Math.random() > 0.5) n = `${adj} ${key}`;
-                            else n = `${key} ${r}`; // "Brownie Bite"
+                            else n = `${key} ${adj}`; // Rare but possible
                         } 
                         else if (type === 'tech') {
-                            // Abstract: "Velora"
+                            // Abstract
                             const s = sylls.start[Math.floor(Math.random()*sylls.start.length)];
                             const m = sylls.mid[Math.floor(Math.random()*sylls.mid.length)];
                             const e = sylls.end[Math.floor(Math.random()*sylls.end.length)];
                             n = s + m + e;
                         }
                         else {
-                            // Smart Blend (Portmanteau)
-                            // 1. Blend Keyword + Root
-                            // 2. Blend Root + Keyword
-                            if(Math.random() > 0.5) n = spliceWord(key, r);
-                            else n = spliceWord(r, key);
+                            // SMART FUSION (Fixes "Just adding two words")
+                            const preList = smartPrefixes[ind] || smartPrefixes.tech;
+                            const sufList = smartSuffixes[ind] || smartSuffixes.tech;
+                            
+                            const p = preList[Math.floor(Math.random()*preList.length)];
+                            const s = sufList[Math.floor(Math.random()*sufList.length)];
+                            
+                            const mode = Math.floor(Math.random() * 3);
+                            
+                            if (mode === 0) {
+                                // Prefix + Keyword (Fusion) -> Vita + Brownie = Vitabrownie (No, truncate!)
+                                // Better: Vita + Brown = Vitabrown
+                                let truncKey = key.length > 4 ? key.substring(0,4) : key;
+                                n = p + truncKey.toLowerCase();
+                            } 
+                            else if (mode === 1) {
+                                // Keyword + Suffix -> Brownie + est = Brownest
+                                let truncKey = key.length > 4 ? key.substring(0,4) : key;
+                                n = truncKey + s;
+                            } 
+                            else {
+                                // Double Truncation -> Vita + Brownie = Vibrow
+                                let truncP = p.substring(0,2);
+                                let truncK = key.substring(0,3);
+                                n = truncP + truncK.toLowerCase() + (Math.random()>0.5 ? 'ia' : 'ex');
+                            }
                         }
                         
                         // Capitalize & Dedupe
@@ -466,14 +486,14 @@
                             document.getElementById('domain-preview').innerText = txt.toLowerCase().replace(/\s/g, '') + '.com available';
                             document.querySelectorAll('.name-chip').forEach(c => c.classList.remove('selected'));
                             el.classList.add('selected');
-                            localStorage.setItem('brandZen_v15', JSON.stringify(State));
+                            localStorage.setItem('brandZen_v16', JSON.stringify(State));
                         };
                         grid.appendChild(el);
                     });
                 }
             },
 
-            // 2. DEEP STRATEGY ENGINE (HTML Output)
+            // 2. DEEP STRATEGY ENGINE (Lists)
             Canvas: {
                 generate: () => {
                     const btn = document.getElementById('btn-gen-canvas');
@@ -486,46 +506,49 @@
                         const persona = State.persona || "Target Users";
                         
                         // --- TAG DETECTION ---
-                        const isHealth = desc.includes('health') || desc.includes('diet') || desc.includes('organic');
-                        const isSpeed = desc.includes('fast') || desc.includes('instant') || desc.includes('quick');
-                        const isPremium = desc.includes('premium') || desc.includes('luxury') || desc.includes('expensive');
+                        const tags = [];
+                        if (desc.includes('health') || desc.includes('diet') || desc.includes('organic')) tags.push('HEALTH');
+                        if (desc.includes('fast') || desc.includes('instant') || desc.includes('quick')) tags.push('SPEED');
+                        if (desc.includes('premium') || desc.includes('luxury')) tags.push('LUXURY');
                         
                         // --- PROBLEM ---
                         let probHTML = `<ul>
-                            <li><strong>Market Saturation:</strong> Users are overwhelmed by generic ${key} options that lack differentiation.</li>
-                            <li><strong>Reliability Gap:</strong> Current solutions are either too expensive or too low-quality for ${persona}.</li>
+                            <li><strong>Lack of Specialization:</strong> The market is flooded with generic ${key} options that don't address specific ${persona} needs.</li>
+                            <li><strong>Quality Inconsistency:</strong> Current competitors sacrifice quality for scale.</li>
+                            <li><strong>Trust Deficit:</strong> Users are skeptical of existing claims in the ${State.industry} space.</li>
                         </ul>`;
                         
-                        if(isHealth) {
+                        if(tags.includes('HEALTH')) {
                             probHTML = `<ul>
-                                <li><strong>The Trade-off:</strong> Consumers currently have to choose between taste and health.</li>
-                                <li><strong>Trust Deficit:</strong> "Healthy" options often contain hidden preservatives or sugars.</li>
-                                <li><strong>Access:</strong> Clean, organic ${key} is hard to find in convenience channels.</li>
+                                <li><strong>The "Healthy vs Tasty" Dilemma:</strong> Consumers forced to choose between nutrition and flavor.</li>
+                                <li><strong>Label Fatigue:</strong> Hidden ingredients and complex labels confuse buyers.</li>
+                                <li><strong>Accessibility:</strong> Clean, organic ${key} is rarely available in convenient formats.</li>
                             </ul>`;
                         }
 
                         // --- SOLUTION ---
                         let solHTML = `<ul>
-                            <li><strong>Specialization:</strong> A dedicated ${key} brand focusing purely on ${persona}.</li>
-                            <li><strong>Experience:</strong> Elevating the purchase experience through better design and service.</li>
+                            <li><strong>Niche Focus:</strong> A ${key} brand built exclusively for ${persona}.</li>
+                            <li><strong>Radical Transparency:</strong> Clear sourcing and production methods to build trust.</li>
+                            <li><strong>Experience-First:</strong> Elevating the unboxing and service layer.</li>
                         </ul>`;
 
-                        if(isHealth && isSpeed) {
+                        if(tags.includes('SPEED')) {
                             solHTML = `<ul>
-                                <li><strong>No-Compromise Product:</strong> A ${key} that is ready in seconds but nutritionally complete.</li>
-                                <li><strong>Transparent Labeling:</strong> Ingredients so clean a 5-year-old can read them.</li>
-                                <li><strong>Direct-to-Consumer:</strong> bypassing stale retail supply chains.</li>
+                                <li><strong>Instant Gratification:</strong> ${key} delivered/ready in minutes, not hours.</li>
+                                <li><strong>Frictionless UX:</strong> One-tap reordering and subscription options.</li>
+                                <li><strong>On-Demand Logistics:</strong> Optimized supply chain for rapid fulfillment.</li>
                             </ul>`;
                         }
 
                         // --- UVP ---
-                        let uvpText = `The only ${State.industry} brand that combines speed, quality, and trust for ${persona}.`;
-                        if(isPremium) uvpText = `Affordable Luxury: The experience of a high-end brand at an accessible price point.`;
+                        let uvpText = `The only ${State.industry} brand that combines the speed of tech with the quality of artisan craft for ${persona}.`;
+                        if(tags.includes('LUXURY')) uvpText = `Affordable Luxury: The experience of a high-end brand at an accessible daily price point.`;
 
                         document.getElementById('cnv-prob').innerHTML = probHTML;
                         document.getElementById('cnv-sol').innerHTML = solHTML;
                         document.getElementById('cnv-uvp').innerText = uvpText;
-                        document.getElementById('cnv-adv').innerHTML = `<ul><li>Proprietary Formulation/Data</li><li>Brand Community Moat</li></ul>`;
+                        document.getElementById('cnv-adv').innerHTML = `<ul><li>Proprietary Data/Recipe</li><li>Exclusive Supply Chain</li><li>Brand Community Moat</li></ul>`;
 
                     }, 600);
                 }
