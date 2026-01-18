@@ -3,478 +3,467 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Founder War Room | Strategic Business Architect</title>
+    <title>BrandZen | Strategic Intelligence</title>
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-body: #09090b;       /* Zinc 950 */
-            --bg-card: #18181b;       /* Zinc 900 */
-            --bg-input: #27272a;      /* Zinc 800 */
-            --border: #3f3f46;        /* Zinc 700 */
-            --primary: #8b5cf6;       /* Violet 500 */
-            --primary-glow: rgba(139, 92, 246, 0.3);
-            --text-main: #fafafa;
-            --text-muted: #a1a1aa;
+            /* Stealth Palette */
+            --bg: #0a0a0a;
+            --surface: #171717;
+            --surface-hover: #262626;
+            --border: #404040;
+            --primary: #f5f5f5;
+            --primary-dim: #a3a3a3;
+            --accent: #3b82f6; /* Subtle Blue */
+            --text: #e5e5e5;
+            --text-muted: #737373;
             --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --radius: 12px;
-            --nav-height: 70px;
+            
+            --radius: 8px;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --nav-w: 240px;
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg-body); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-main); height: 100vh; display: flex; overflow: hidden; font-size: 14px; letter-spacing: -0.01em; }
 
-        /* --- LAYOUT SYSTEM --- */
-        .app-shell { display: flex; width: 100%; height: 100%; }
-        
-        /* SIDEBAR (Desktop) */
-        aside { width: 280px; background: var(--bg-card); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; flex-shrink: 0; }
-        .logo-area { padding: 25px; font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px; color: white; border-bottom: 1px solid var(--border); }
-        .logo-area i { color: var(--primary); }
-        
-        .nav-links { flex: 1; padding: 15px; display: flex; flex-direction: column; gap: 5px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 8px;
-            color: var(--text-muted); cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.95rem;
+        /* --- LAYOUT --- */
+        aside { 
+            width: var(--nav-w); background: var(--bg); border-right: 1px solid var(--border); 
+            display: flex; flex-direction: column; z-index: 50; flex-shrink: 0; 
         }
-        .nav-item:hover { background: var(--bg-input); color: white; }
-        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
-
-        /* MAIN CANVAS */
+        
         main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-        .view { display: none; padding: 40px; overflow-y: auto; height: 100%; max-width: 1000px; margin: 0 auto; width: 100%; padding-bottom: 100px; }
-        .view.active { display: block; animation: fadeUp 0.3s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .scroll-container { flex: 1; overflow-y: auto; padding: 40px; max-width: 1000px; margin: 0 auto; width: 100%; padding-bottom: 120px; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 500; color: var(--primary); margin: 0 0 10px 0; letter-spacing: -0.02em; }
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        p.desc { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 30px; max-width: 600px; }
+        .mono { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; color: var(--text-muted); }
 
         /* --- COMPONENTS --- */
-        h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin: 0 0 10px 0; letter-spacing: -0.5px; }
-        h2 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; margin: 30px 0 15px 0; color: white; }
-        p.desc { color: var(--text-muted); font-size: 1rem; margin-bottom: 30px; line-height: 1.6; max-width: 600px; }
+        .card { 
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); 
+            padding: 24px; margin-bottom: 16px; transition: border-color 0.2s;
+        }
+        .card:hover { border-color: #525252; }
 
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
 
         /* Inputs */
-        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; font-family: var(--font-main); }
         input, select, textarea {
-            width: 100%; background: var(--bg-input); border: 1px solid var(--border); color: white;
-            padding: 14px; border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; transition: 0.2s;
+            width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+            padding: 12px; border-radius: var(--radius); font-size: 13px; font-family: var(--font-main); transition: 0.2s;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px var(--primary-glow); }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-dim); }
+        ::placeholder { color: #404040; }
 
         /* Buttons */
         .btn {
-            background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 8px;
-            font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; transition: transform 0.1s;
+            background: var(--primary); color: var(--bg); border: none; padding: 10px 20px; border-radius: var(--radius);
+            font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; 
+            gap: 8px; font-size: 13px; transition: opacity 0.2s;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); }
-        .btn-outline:hover { background: var(--bg-input); border-color: var(--text-muted); }
-        .btn-full { width: 100%; }
-
-        /* --- MODULE: BRANDING --- */
-        .name-card {
-            background: var(--bg-input); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius);
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
+        .btn:hover { opacity: 0.9; }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-ghost:hover { background: var(--surface-hover); border-color: var(--text-muted); }
+        
+        /* --- NAVIGATION --- */
+        .logo { padding: 24px; font-weight: 600; color: var(--primary); font-size: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .nav-list { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px;
+            color: var(--text-muted); cursor: pointer; transition: 0.2s; font-size: 13px;
         }
-        .name-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .name-card.selected { border: 2px solid var(--primary); background: rgba(139, 92, 246, 0.1); }
-        .name-text { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; color: white; }
-        .domain-tag { font-size: 0.75rem; background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 4px 8px; border-radius: 20px; }
+        .nav-item:hover { background: var(--surface); color: var(--text); }
+        .nav-item.active { background: var(--surface); color: var(--primary); border: 1px solid var(--border); }
+        .nav-item i { font-size: 16px; }
 
-        /* --- MODULE: STRATEGY DASHBOARD --- */
-        .stat-card { background: var(--bg-input); padding: 20px; border-radius: var(--radius); text-align: center; border: 1px solid var(--border); }
-        .stat-val { font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--primary); margin: 10px 0; }
-        .stat-label { color: var(--text-muted); font-size: 0.9rem; }
-        
-        .swot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
-        .swot-item { padding: 15px; border-radius: 8px; background: rgba(255,255,255,0.03); border-left: 4px solid #555; font-size: 0.9rem; line-height: 1.5; }
-        
-        .persona-avatar { width: 60px; height: 60px; background: var(--bg-card); border-radius: 50%; border: 2px solid var(--primary); display: grid; place-items: center; font-size: 1.5rem; color: var(--primary); margin-bottom: 15px; }
-        
-        /* --- MOBILE RESPONSIVENESS --- */
+        /* --- FOOTER --- */
+        .footer-credit {
+            padding: 20px; text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-mono);
+            border-top: 1px solid var(--border); margin-top: auto;
+        }
+
+        /* --- MODULE: ZEN NAMES --- */
+        .name-chip {
+            background: var(--bg); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius);
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+        }
+        .name-chip:hover { border-color: var(--primary-dim); transform: translateY(-1px); }
+        .name-chip.selected { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .name-txt { font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--text); }
+        .domain-status { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+
+        /* --- MODULE: STRATEGY CANVAS --- */
+        .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+        .canvas-cell { background: var(--surface); padding: 20px; min-height: 140px; }
+        .canvas-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; }
+        .canvas-content { font-size: 13px; line-height: 1.5; color: var(--primary-dim); white-space: pre-line; }
+
+        /* --- VISUALS --- */
+        .status-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .view { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .app-shell { flex-direction: column; }
+            body { flex-direction: column; }
             aside { 
-                position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); 
-                border-right: none; border-top: 1px solid var(--border); flex-direction: row; 
-                padding: 0; justify-content: space-around; background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(10px);
+                width: 100%; height: auto; border-right: none; border-top: 1px solid var(--border); 
+                order: 2; flex-direction: row; padding: 0; justify-content: space-evenly; 
+                background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); position: fixed; bottom: 0;
             }
-            .logo-area { display: none; }
-            .nav-links { flex-direction: row; padding: 0; width: 100%; justify-content: space-evenly; }
-            .nav-item { flex-direction: column; gap: 4px; padding: 10px; border-radius: 0; background: none !important; font-size: 0.7rem; box-shadow: none !important; }
-            .nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
-            .nav-item.active { color: var(--primary); }
-            
-            main { padding-bottom: var(--nav-height); }
-            .view { padding: 20px; padding-bottom: 100px; }
-            h1 { font-size: 1.8rem; }
-            
-            /* Inputs larger for touch */
-            input, select, textarea, button { font-size: 16px; } 
+            .logo, .footer-credit { display: none; }
+            .nav-list { flex-direction: row; width: 100%; justify-content: space-around; padding: 0; }
+            .nav-item { flex-direction: column; gap: 4px; padding: 12px; background: none !important; border: none !important; }
+            .nav-item span { font-size: 10px; }
+            .nav-item i { font-size: 20px; }
+            main { padding-bottom: 70px; }
+            .scroll-container { padding: 20px; }
+            .canvas-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="app-shell">
-    
     <aside>
-        <div class="logo-area"><i class="ph-fill ph-strategy"></i> WarRoom</div>
-        <div class="nav-links">
+        <div class="logo"><i class="ph-fill ph-infinity"></i> BrandZen</div>
+        <div class="nav-list">
             <div class="nav-item active" onclick="App.route('profile')">
-                <i class="ph ph-identification-card"></i>
+                <i class="ph ph-fingerprint"></i>
                 <span>Profile</span>
             </div>
-            <div class="nav-item" onclick="App.route('branding')">
-                <i class="ph ph-sparkle"></i>
-                <span>Identity</span>
+            <div class="nav-item" onclick="App.route('names')">
+                <i class="ph ph-text-aa"></i>
+                <span>Naming</span>
             </div>
-            <div class="nav-item" onclick="App.route('strategy')">
-                <i class="ph ph-chart-polar"></i>
+            <div class="nav-item" onclick="App.route('canvas')">
+                <i class="ph ph-strategy"></i>
                 <span>Strategy</span>
             </div>
             <div class="nav-item" onclick="App.route('analysis')">
-                <i class="ph ph-binoculars"></i>
+                <i class="ph ph-crosshair"></i>
                 <span>Competitors</span>
             </div>
+        </div>
+        <div class="footer-credit">
+            Made with ❤️ by <br> Harsha Varthan E P
         </div>
     </aside>
 
     <main>
-        
-        <div id="view-profile" class="view active">
-            <h1>Business Intelligence.</h1>
-            <p class="desc">Initialize the strategic engine. The data you provide here shapes the AI analysis, branding, and personas.</p>
-            
-            <div class="card">
+        <div class="scroll-container">
+
+            <div id="view-profile" class="view active">
+                <span class="mono">01 / Foundation</span>
+                <h1>Define the Essence</h1>
+                <p class="desc">Input the core DNA of your venture. The system uses this to infer strategy, naming topology, and market gaps.</p>
+                
+                <div class="card">
+                    <div class="grid-2">
+                        <div>
+                            <label>Industry</label>
+                            <select id="inp-ind">
+                                <option value="tech">SaaS / Technology</option>
+                                <option value="food">Culinary / F&B</option>
+                                <option value="fashion">Apparel / Lifestyle</option>
+                                <option value="service">Agency / Consulting</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Root Keyword</label>
+                            <input type="text" id="inp-key" placeholder="e.g. Code, Spice, Silk">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="grid-2">
+                         <div>
+                            <label>Value Proposition</label>
+                            <textarea id="inp-desc" rows="3" placeholder="What specific problem are you solving?"></textarea>
+                        </div>
+                        <div>
+                            <label>Target Persona</label>
+                            <input type="text" id="inp-persona" placeholder="e.g. Busy startup founders">
+                        </div>
+                    </div>
+                    <br>
+                    <button class="btn" onclick="App.saveProfile()">Initialize System <i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div id="view-names" class="view">
+                <span class="mono">02 / Identity</span>
+                <h1>Zen Naming Engine</h1>
+                <p class="desc">Generates short, syllabic, phonetically balanced names (4-7 chars). No generic combinations.</p>
+                
                 <div class="grid-2">
-                    <div>
-                        <label>Industry Sector</label>
-                        <select id="inp-industry">
-                            <option value="tech">Technology / SaaS / App</option>
-                            <option value="food">Food & Beverage / Culinary</option>
-                            <option value="fashion">Fashion / Retail / Lifestyle</option>
-                            <option value="service">Professional Services / Consulting</option>
-                            <option value="health">Health / Wellness / Medical</option>
+                    <div class="card">
+                        <label>Vibe</label>
+                        <select id="inp-vibe">
+                            <option value="minimal">Minimal (e.g., Cos)</option>
+                            <option value="tech">Futuristic (e.g., Vercel)</option>
+                            <option value="organic">Organic (e.g., Aura)</option>
                         </select>
+                        <br><br>
+                        <button class="btn btn-ghost" style="width:100%" onclick="Modules.Naming.generate()">Regenerate</button>
                     </div>
-                    <div>
-                        <label>Core Keyword</label>
-                        <input type="text" id="inp-keyword" placeholder="e.g. Brownie, CRM, Sneaker">
+                    
+                    <div class="card" style="border-color: var(--primary-dim);">
+                        <label>Active Brand</label>
+                        <h2 id="active-brand" style="margin-top:10px; font-size:32px;">...</h2>
+                        <div id="domain-preview" class="mono" style="margin-top:5px; color:var(--success);">Select a name</div>
                     </div>
                 </div>
-                <br>
-                <label>Value Proposition</label>
-                <textarea id="inp-desc" rows="3" placeholder="What are you selling and why is it unique?"></textarea>
-                <br>
-                <label>Target Audience</label>
-                <input type="text" id="inp-audience" placeholder="e.g. Health-conscious Gen Z in urban areas">
-                <br><br>
-                <button class="btn btn-full" onclick="App.saveProfile()">Initialize Strategy Engine</button>
-            </div>
-        </div>
 
-        <div id="view-branding" class="view">
-            <h1>Identity Architect.</h1>
-            <p class="desc">Semantic naming engine using industry-specific linguistic roots.</p>
-            
-            <div class="card">
-                <div class="grid-2" style="align-items: end;">
-                    <div>
-                        <label>Brand Archetype</label>
-                        <select id="inp-archetype">
-                            <option value="modern">Modern & Minimal (e.g. Uber)</option>
-                            <option value="premium">Premium & Heritage (e.g. Rolex)</option>
-                            <option value="playful">Playful & Accessible (e.g. Mailchimp)</option>
-                        </select>
+                <div id="name-grid" class="grid-3" style="margin-top:20px;">
                     </div>
-                    <button class="btn" onclick="Modules.Branding.generate()">Generate Candidates</button>
-                </div>
-                <div id="name-grid" class="grid-2" style="margin-top: 20px;"></div>
             </div>
-            
-            <div class="card" style="border-color: var(--primary);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase;">Selected Brand</div>
-                        <div id="active-brand" style="font-family:'Outfit'; font-size:1.5rem; font-weight:700; color:white;">-</div>
-                    </div>
-                    <button class="btn btn-outline" onclick="App.route('strategy')">Lock & Proceed</button>
-                </div>
-            </div>
-        </div>
 
-        <div id="view-strategy" class="view">
-            <h1>Strategic War Room.</h1>
-            <p class="desc">Deep analysis of your market position, strengths, and ideal customer.</p>
-            
-            <div class="grid-2">
-                <div class="card" style="display:flex; flex-direction:column; justify-content:center;">
-                    <h3 style="margin-top:0;">Product Market Fit</h3>
-                    <div style="text-align:center;">
-                        <div class="stat-val" id="pmf-score">0%</div>
-                        <div class="stat-label">Viability Score</div>
-                        <input type="range" min="0" max="100" value="0" style="width:100%; margin-top:15px; accent-color:var(--primary);" id="pmf-slider" oninput="document.getElementById('pmf-score').innerText = this.value + '%'">
-                        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:10px;">Adjust based on validation interviews.</p>
+            <div id="view-canvas" class="view">
+                <span class="mono">03 / Blueprint</span>
+                <h1>Lean Business Canvas</h1>
+                <p class="desc">A generated 1-page business model based on your industry constraints.</p>
+                
+                <button class="btn" onclick="Modules.Canvas.generate()" style="margin-bottom:20px;">Generate Canvas</button>
+
+                <div class="canvas-grid">
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Problem</span>
+                        <div id="cnv-prob" class="canvas-content">Pending analysis...</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Solution</span>
+                        <div id="cnv-sol" class="canvas-content">Pending analysis...</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Unique Value Prop</span>
+                        <div id="cnv-uvp" class="canvas-content">Pending analysis...</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Unfair Advantage</span>
+                        <div id="cnv-adv" class="canvas-content">Pending analysis...</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Customer Segments</span>
+                        <div id="cnv-seg" class="canvas-content">Pending analysis...</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <span class="canvas-title">Revenue Streams</span>
+                        <div id="cnv-rev" class="canvas-content">Pending analysis...</div>
                     </div>
                 </div>
+            </div>
+
+            <div id="view-analysis" class="view">
+                <span class="mono">04 / Intelligence</span>
+                <h1>Gap Analysis Matrix</h1>
+                <p class="desc">Identify the "Blue Ocean" by analyzing competitor weaknesses.</p>
 
                 <div class="card">
-                    <h3 style="margin-top:0;">Buyer Persona</h3>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <div class="persona-avatar"><i class="ph ph-user"></i></div>
+                    <div class="grid-2" style="align-items:end;">
                         <div>
-                            <strong id="persona-name">Run Analysis First</strong>
-                            <div id="persona-details" style="font-size:0.9rem; color:var(--text-muted);">Define audience in Profile tab.</div>
+                            <label>Competitor Name</label>
+                            <input type="text" id="comp-name" placeholder="e.g. Market Leader">
                         </div>
-                    </div>
-                    <div style="margin-top:15px; font-size:0.9rem; line-height:1.5;">
-                        <strong>Pain Points:</strong>
-                        <ul id="persona-pain" style="padding-left:20px; color:var(--text-muted);">
-                            <li>Waiting for input...</li>
-                        </ul>
+                        <button class="btn" onclick="Modules.Analysis.analyze()">Run Gap Analysis</button>
                     </div>
                 </div>
+
+                <div id="gap-results"></div>
             </div>
 
-            <h2>SWOT Matrix</h2>
-            <div class="swot-grid">
-                <div class="swot-item" style="border-color: var(--success);">
-                    <strong style="color:var(--success); display:block; margin-bottom:5px;">STRENGTHS</strong>
-                    <div id="swot-s">Run Analysis...</div>
-                </div>
-                <div class="swot-item" style="border-color: var(--warning);">
-                    <strong style="color:var(--warning); display:block; margin-bottom:5px;">WEAKNESSES</strong>
-                    <div id="swot-w">Run Analysis...</div>
-                </div>
-                <div class="swot-item" style="border-color: var(--primary);">
-                    <strong style="color:var(--primary); display:block; margin-bottom:5px;">OPPORTUNITIES</strong>
-                    <div id="swot-o">Run Analysis...</div>
-                </div>
-                <div class="swot-item" style="border-color: var(--danger);">
-                    <strong style="color:var(--danger); display:block; margin-bottom:5px;">THREATS</strong>
-                    <div id="swot-t">Run Analysis...</div>
-                </div>
-            </div>
-            <br>
-            <button class="btn btn-full" onclick="Modules.Strategy.run()">Generate Strategic Report</button>
         </div>
-
-        <div id="view-analysis" class="view">
-            <h1>Competitive Landscape.</h1>
-            <p class="desc">Identify gaps in the market and exploit competitor weaknesses.</p>
-            
-            <div class="card">
-                <div class="grid-2" style="align-items:end;">
-                    <div>
-                        <label>Competitor Name</label>
-                        <input type="text" id="comp-name" placeholder="e.g. Domino's / Salesforce">
-                    </div>
-                    <button class="btn" onclick="Modules.Competitor.analyze()">Analyze Competitor</button>
-                </div>
-            </div>
-
-            <div id="comp-results">
-                </div>
-        </div>
-
     </main>
-</div>
 
-<script>
-    /* --- STATE --- */
-    const State = {
-        industry: 'tech',
-        keyword: '',
-        audience: '',
-        desc: '',
-        brand: 'Untitled'
-    };
+    <script>
+        /* --- STATE --- */
+        const State = {
+            industry: 'tech', keyword: '', brand: '',
+            desc: '', persona: ''
+        };
 
-    /* --- CORE --- */
-    const App = {
-        init: () => {
-            if(localStorage.getItem('founderWarRoom')) {
-                Object.assign(State, JSON.parse(localStorage.getItem('founderWarRoom')));
-                document.getElementById('inp-industry').value = State.industry;
-                document.getElementById('inp-keyword').value = State.keyword;
-                document.getElementById('inp-audience').value = State.audience;
-                document.getElementById('inp-desc').value = State.desc;
-                document.getElementById('active-brand').innerText = State.brand;
-            }
-        },
-        route: (id) => {
-            document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
-            document.getElementById('view-'+id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-            // In a real app, logic to highlight nav based on index
-        },
-        saveProfile: () => {
-            State.industry = document.getElementById('inp-industry').value;
-            State.keyword = document.getElementById('inp-keyword').value;
-            State.audience = document.getElementById('inp-audience').value;
-            State.desc = document.getElementById('inp-desc').value;
-            localStorage.setItem('founderWarRoom', JSON.stringify(State));
-            App.route('branding');
-        }
-    };
-
-    /* --- MODULES --- */
-    const Modules = {
-        
-        // 1. BRANDING
-        Branding: {
-            generate: () => {
-                const k = State.keyword.replace(/[^a-zA-Z]/g, '') || "Core";
-                const ind = State.industry;
-                const type = document.getElementById('inp-archetype').value;
-                const grid = document.getElementById('name-grid');
-                grid.innerHTML = '';
-
-                // Semantic Roots
-                const roots = {
-                    food: ['Gust', 'Savor', 'Nour', 'Vit', 'Chef', 'Pure', 'Spice', 'Hearth'],
-                    tech: ['Syn', 'Dat', 'Vel', 'Nov', 'Quant', 'Virt', 'Net', 'Sys'],
-                    fashion: ['Vogue', 'Moda', 'Lux', 'Chic', 'Aura', 'Silk', 'Trend', 'Wear'],
-                    health: ['Viv', 'Cur', 'San', 'Medi', 'Well', 'Bio', 'Life', 'Zen']
-                };
-                
-                // Suffixes based on Archetype
-                const suffixes = {
-                    modern: ['ify', 'ly', 'io', 'co', 'box', 'lab'],
-                    premium: ['ora', 'ia', 'us', 'ex', 'os', 'a'],
-                    playful: ['joy', 'pal', 'ster', 'y', 'o', 'hut']
-                };
-
-                const chosenRoots = roots[ind] || roots.tech;
-                const chosenSuffixes = suffixes[type] || suffixes.modern;
-                
-                let results = [];
-                for(let i=0; i<6; i++) {
-                    const r = chosenRoots[Math.floor(Math.random() * chosenRoots.length)];
-                    const s = chosenSuffixes[Math.floor(Math.random() * chosenSuffixes.length)];
-                    results.push(r + s);
-                }
-                
-                // Add Keyword Blends
-                results.push(k + (type === 'premium' ? 'ia' : 'ify'));
-                results.push((type === 'playful' ? 'Go' : 'Pro') + k);
-
-                results.forEach(n => {
-                    const el = document.createElement('div');
-                    el.className = 'name-card';
-                    el.innerHTML = `
-                        <div class="name-text">${n}</div>
-                        <span class="domain-tag">Available</span>
-                    `;
-                    el.onclick = () => {
-                        State.brand = n;
-                        document.getElementById('active-brand').innerText = n;
-                        document.querySelectorAll('.name-card').forEach(c => c.classList.remove('selected'));
-                        el.classList.add('selected');
-                        localStorage.setItem('founderWarRoom', JSON.stringify(State));
-                    };
-                    grid.appendChild(el);
-                });
-            }
-        },
-
-        // 2. STRATEGY (SWOT & PERSONA)
-        Strategy: {
-            run: () => {
-                const ind = State.industry;
-                
-                // SWOT LOGIC
-                const swotData = {
-                    food: {
-                        s: "Unique flavor profile, Local sourcing narrative, High repeat purchase potential.",
-                        w: "Perishable inventory, Low initial margins, High delivery costs.",
-                        o: "Ghost kitchen expansion, Corporate catering, Health-conscious variants.",
-                        t: "Supply chain disruptions, Rising ingredient costs, Health regulations."
-                    },
-                    tech: {
-                        s: "Scalable architecture, Low marginal cost, Global reach potential.",
-                        w: "High development time, Need for constant updates, User retention churn.",
-                        o: "AI Integration features, Enterprise API licensing, Freemium adoption.",
-                        t: "Data privacy laws (GDPR), Big Tech copycats, Platform dependency."
+        /* --- CORE --- */
+        const App = {
+            init: () => {
+                if(localStorage.getItem('brandZen_v1')) {
+                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v1')));
+                    document.getElementById('inp-ind').value = State.industry;
+                    document.getElementById('inp-key').value = State.keyword;
+                    document.getElementById('inp-desc').value = State.desc;
+                    document.getElementById('inp-persona').value = State.persona;
+                    if(State.brand) {
+                        document.getElementById('active-brand').innerText = State.brand;
+                        document.getElementById('domain-preview').innerText = State.brand.toLowerCase() + '.com available check';
                     }
-                };
-                const def = swotData[ind] || swotData.tech;
-                
-                document.getElementById('swot-s').innerText = def.s;
-                document.getElementById('swot-w').innerText = def.w;
-                document.getElementById('swot-o').innerText = def.o;
-                document.getElementById('swot-t').innerText = def.t;
-
-                // PERSONA LOGIC
-                const names = ["Alex (The Professional)", "Sarah (The Busy Mom)", "Jordan (The Student)", "Priya (The Executive)"];
-                const name = names[Math.floor(Math.random()*names.length)];
-                document.getElementById('persona-name').innerText = name;
-                document.getElementById('persona-details').innerText = State.audience || "General Audience";
-                
-                const pains = {
-                    food: "Lacks time to cook healthy meals. Wants comfort food without guilt.",
-                    tech: "Frustrated by complex UIs. Wants automation to save time.",
-                    fashion: "Wants to look trendy but hates fast fashion waste.",
-                    health: "Confused by conflicting medical advice. Wants simple tracking."
-                };
-                const pain = pains[ind] || pains.tech;
-                document.getElementById('persona-pain').innerHTML = `<li>${pain}</li><li>Needs a trusted brand (High intent).</li>`;
-                
-                // PMF Score calc
-                const score = Math.floor(Math.random() * (85 - 60) + 60); // Random score 60-85 for demo
-                document.getElementById('pmf-score').innerText = score + "%";
-                document.getElementById('pmf-slider').value = score;
+                }
+            },
+            saveProfile: () => {
+                State.industry = document.getElementById('inp-ind').value;
+                State.keyword = document.getElementById('inp-key').value;
+                State.desc = document.getElementById('inp-desc').value;
+                State.persona = document.getElementById('inp-persona').value;
+                localStorage.setItem('brandZen_v1', JSON.stringify(State));
+                App.route('names');
+            },
+            route: (id) => {
+                document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
+                document.getElementById('view-'+id).classList.add('active');
+                document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+                // Simple highlight logic would go here
             }
-        },
+        };
 
-        // 3. COMPETITOR ANALYSIS
-        Competitor: {
-            analyze: () => {
-                const comp = document.getElementById('comp-name').value;
-                if(!comp) return alert("Enter a competitor name");
-                
-                const container = document.getElementById('comp-results');
-                const ind = State.industry;
-                
-                let weakness = "Slow customer support";
-                let gap = "Personalized service";
-                
-                if(ind === 'food') { weakness = "Generic taste, Unhealthy ingredients"; gap = "Premium, Healthy, Authentic experience"; }
-                if(ind === 'tech') { weakness = "Complex UI, Expensive enterprise pricing"; gap = "Simple UX, Affordable for SMBs"; }
-                
-                const html = `
-                    <div class="card" style="border-left: 4px solid var(--primary); animation: fadeUp 0.3s ease;">
-                        <h2>${comp} Analysis</h2>
-                        <div class="grid-2">
-                            <div>
-                                <label style="color:var(--danger)">Their Weakness</label>
-                                <p>${weakness}</p>
-                            </div>
-                            <div>
-                                <label style="color:var(--success)">Your Gap (Opportunity)</label>
-                                <p>${gap}</p>
+        /* --- MODULES --- */
+        const Modules = {
+            
+            // 1. ZEN NAMING (Syllabic Topology)
+            Naming: {
+                generate: () => {
+                    const ind = State.industry;
+                    const vibe = document.getElementById('inp-vibe').value;
+                    const grid = document.getElementById('name-grid');
+                    grid.innerHTML = '';
+                    
+                    // Phonetic Particles (Not whole words)
+                    const onsets = {
+                        tech: ['V', 'S', 'Z', 'Q', 'X', 'N', 'K', 'Str'],
+                        food: ['G', 'M', 'B', 'P', 'Cr', 'Sp', 'L'],
+                        fashion: ['V', 'L', 'M', 'Ch', 'Aur', 'S'],
+                        minimal: ['O', 'A', 'E', 'Io', 'U']
+                    };
+                    const nuclei = ['a', 'o', 'i', 'e', 'u', 'y', 'ae', 'ou'];
+                    const codas = {
+                        tech: ['x', 'sys', 'net', 'io', 'on', 'os', 'ex'],
+                        food: ['um', 'est', 'os', 'a', 'o', 'pure'],
+                        fashion: ['ra', 'na', 'ia', 'elle', 'xy'],
+                        minimal: ['n', 's', 'm', 'r', '']
+                    };
+                    
+                    const setOn = onsets[ind] || onsets.tech;
+                    const setCod = codas[ind] || codas.tech;
+                    
+                    let names = new Set();
+                    
+                    // Algorithm: CVC / CVCV Construction
+                    while(names.size < 9) {
+                        let n = "";
+                        const r = Math.random();
+                        
+                        if(r < 0.3) {
+                            // Short (3-4 chars): Onset + Nucleus + Coda
+                            n = getRandom(setOn) + getRandom(nuclei) + getRandom(setCod).substring(0,2);
+                        } else if (r < 0.6) {
+                            // Abstract (4-6 chars): Onset + Nucleus + Onset + Nucleus
+                            n = getRandom(setOn) + getRandom(nuclei) + getRandom(setOn).toLowerCase() + getRandom(nuclei);
+                        } else {
+                            // Keyword Fusion
+                            const k = State.keyword.substring(0,3);
+                            n = k + getRandom(setCod);
+                        }
+                        
+                        // Capitalize & Clean
+                        n = n.charAt(0).toUpperCase() + n.slice(1).replace(/[^a-zA-Z]/g, '');
+                        if(n.length > 3 && n.length < 9) names.add(n);
+                    }
+
+                    names.forEach(name => {
+                        const el = document.createElement('div');
+                        el.className = 'name-chip';
+                        el.innerHTML = `
+                            <span class="name-txt">${name}</span>
+                            <a href="https://www.namecheap.com/domains/registration/results/?domain=${name}" target="_blank" class="domain-status">Check .com</a>
+                        `;
+                        el.onclick = (e) => {
+                            if(e.target.tagName === 'A') return;
+                            State.brand = name;
+                            document.getElementById('active-brand').innerText = name;
+                            document.getElementById('domain-preview').innerHTML = `<span class="status-dot"></span>${name.toLowerCase()}.com`;
+                            document.querySelectorAll('.name-chip').forEach(c => c.classList.remove('selected'));
+                            el.classList.add('selected');
+                            localStorage.setItem('brandZen_v1', JSON.stringify(State));
+                        };
+                        grid.appendChild(el);
+                    });
+                }
+            },
+
+            // 2. CANVAS GENERATOR
+            Canvas: {
+                generate: () => {
+                    const ind = State.industry;
+                    const key = State.keyword;
+                    const persona = State.persona;
+                    
+                    // Data Sets
+                    const problems = {
+                        tech: "Inefficient workflows, High cost of legacy software, Data silos.",
+                        food: "Lack of healthy options, Expensive delivery, Questionable ingredients.",
+                        fashion: "Fast fashion waste, Poor fit sizing, Lack of unique identity."
+                    };
+                    const solutions = {
+                        tech: `AI-driven ${key} automation, Unified dashboard, Cloud-native architecture.`,
+                        food: `Farm-to-table ${key}, Sustainable packaging, Chef-curated recipes.`,
+                        fashion: `Custom-fit ${key}, Sustainable fabrics, Limited edition drops.`
+                    };
+                    const uvp = {
+                        tech: "The only platform that combines speed with enterprise-grade security.",
+                        food: "Restaurant quality taste with home-cooked health benefits.",
+                        fashion: "Look good without compromising on ethical values."
+                    };
+                    
+                    // Fill Canvas
+                    document.getElementById('cnv-prob').innerText = problems[ind] || problems.tech;
+                    document.getElementById('cnv-sol').innerText = solutions[ind] || solutions.tech;
+                    document.getElementById('cnv-uvp').innerText = uvp[ind] || uvp.tech;
+                    document.getElementById('cnv-adv').innerText = "Proprietary Algorithm / Exclusive Supplier Relationships.";
+                    document.getElementById('cnv-seg').innerText = persona || "Niche Early Adopters";
+                    document.getElementById('cnv-rev').innerText = ind === 'tech' ? "SaaS Subscription (MRR)" : "Direct to Consumer (DTC) Sales";
+                }
+            },
+
+            // 3. COMPETITOR ANALYSIS
+            Analysis: {
+                analyze: () => {
+                    const comp = document.getElementById('comp-name').value;
+                    if(!comp) return;
+                    
+                    const ind = State.industry;
+                    const weakness = ind === 'tech' ? "Complex UI & Bloated Features" : "Generic quality & Low transparency";
+                    const gap = ind === 'tech' ? "Radical Simplicity & Speed" : "Authenticity & Premium Ingredients";
+                    
+                    const html = `
+                        <div class="card" style="border-left: 2px solid var(--accent); animation: fadeIn 0.3s ease;">
+                            <h3>${comp} vs. ${State.brand || 'Us'}</h3>
+                            <div class="grid-2" style="margin-top:15px;">
+                                <div>
+                                    <span class="mono" style="color:var(--text-muted)">Their Weakness</span>
+                                    <p style="margin-top:5px;">${weakness}</p>
+                                </div>
+                                <div>
+                                    <span class="mono" style="color:var(--success)">Your Gap Strategy</span>
+                                    <p style="margin-top:5px;">${gap}</p>
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-top:15px; padding-top:15px; border-top:1px solid var(--border);">
-                            <label>Strategy to Win</label>
-                            <p style="color:var(--text-muted)">Position ${State.brand} as the specialist alternative to ${comp}'s generalist approach. Focus marketing on "Don't settle for ${weakness.toLowerCase()}".</p>
-                        </div>
-                    </div>
-                `;
-                
-                container.insertAdjacentHTML('afterbegin', html);
-                document.getElementById('comp-name').value = '';
+                    `;
+                    document.getElementById('gap-results').innerHTML = html + document.getElementById('gap-results').innerHTML;
+                    document.getElementById('comp-name').value = '';
+                }
             }
-        }
-    };
+        };
 
-    window.onload = App.init;
-</script>
+        function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        window.onload = App.init;
+    </script>
 </body>
 </html>
