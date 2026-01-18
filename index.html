@@ -32,21 +32,15 @@
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-main); height: 100vh; display: flex; overflow: hidden; font-size: 14px; letter-spacing: -0.01em; }
 
-        /* --- LAYOUT --- */
-        /* Desktop Sidebar */
+        /* --- DESKTOP LAYOUT (Default) --- */
         aside { 
             width: var(--nav-w); background: var(--bg); border-right: 1px solid var(--border); 
             display: flex; flex-direction: column; z-index: 50; flex-shrink: 0; 
         }
 
-        /* Mobile Header (Hidden on Desktop) */
-        .mobile-header {
-            display: none; height: var(--header-h); width: 100%; background: rgba(9, 9, 11, 0.95);
-            border-bottom: 1px solid var(--border); align-items: center; padding: 0 20px;
-            position: fixed; top: 0; left: 0; z-index: 60; backdrop-filter: blur(10px);
-            justify-content: space-between;
-        }
-        
+        /* Hide Mobile Elements on Desktop */
+        .mobile-header, .nav-mobile, .mobile-credit { display: none !important; }
+
         main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         .scroll-container { flex: 1; overflow-y: auto; padding: 40px; max-width: 1000px; margin: 0 auto; width: 100%; padding-bottom: 120px; }
 
@@ -100,8 +94,6 @@
             padding: 20px; text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-mono);
             border-top: 1px solid var(--border); margin-top: auto;
         }
-        /* Mobile Footer specific class */
-        .mobile-credit { display: none; text-align: center; margin-top: 40px; padding-bottom: 20px; color: var(--text-muted); font-size: 10px; font-family: var(--font-mono); opacity: 0.6; }
 
         /* --- MODULE: ZEN NAMES --- */
         .name-chip {
@@ -130,18 +122,31 @@
             body { flex-direction: column; }
             
             /* Hide Desktop Sidebar */
-            aside { display: none; }
+            aside { display: none !important; }
             
-            /* Show Mobile Header */
-            .mobile-header { display: flex; }
+            /* Show Mobile Elements */
+            .mobile-header { 
+                display: flex !important; 
+                height: var(--header-h); width: 100%; background: rgba(9, 9, 11, 0.95);
+                border-bottom: 1px solid var(--border); align-items: center; padding: 0 20px;
+                position: fixed; top: 0; left: 0; z-index: 60; backdrop-filter: blur(10px);
+                justify-content: space-between;
+            }
             
-            /* Bottom Nav */
             .nav-mobile {
+                display: flex !important;
                 position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
                 background: rgba(9, 9, 11, 0.95); backdrop-filter: blur(10px);
                 border-top: 1px solid var(--border); z-index: 60;
-                display: flex; justify-content: space-around; align-items: center;
+                justify-content: space-around; align-items: center;
             }
+
+            .mobile-credit { 
+                display: block !important; 
+                text-align: center; margin-top: 40px; padding-bottom: 20px; 
+                color: var(--text-muted); font-size: 10px; font-family: var(--font-mono); opacity: 0.6; 
+            }
+
             .nav-m-item {
                 display: flex; flex-direction: column; align-items: center; gap: 4px;
                 color: var(--text-muted); font-size: 10px; font-family: var(--font-mono);
@@ -153,8 +158,6 @@
             .scroll-container { padding: 20px; padding-bottom: 80px; }
             .canvas-grid { grid-template-columns: 1fr; }
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            
-            .mobile-credit { display: block; } /* Show footer in content */
         }
     </style>
 </head>
@@ -189,7 +192,7 @@
         <div style="font-weight:700; color:var(--primary); font-size:16px; display:flex; align-items:center; gap:8px;">
             <i class="ph-fill ph-infinity"></i> BrandZen
         </div>
-        <div style="font-size:10px; color:var(--text-muted);">v11.0</div>
+        <div style="font-size:10px; color:var(--text-muted);">v12.0</div>
     </div>
 
     <main>
@@ -240,16 +243,15 @@
             <div id="view-names" class="view">
                 <span class="mono">02 / Identity</span>
                 <h1>Contextual Naming</h1>
-                <p class="desc">Engine detects 'Healthy' vs 'Indulgent' context to generate relevant brand names.</p>
+                <p class="desc">Engine detects 'Healthy' vs 'Indulgent' context to generate relevant, blended brand names.</p>
                 
                 <div class="grid-2">
                     <div class="card">
                         <label>Name Topology</label>
                         <select id="inp-nametype">
-                            <option value="smart">Smart Mix (Recommended)</option>
-                            <option value="compound">Compound (Two Words)</option>
-                            <option value="fused">Fused (Root + Suffix)</option>
-                            <option value="minimal">Minimal (Abstract)</option>
+                            <option value="smart">Smart Blends (Recommended)</option>
+                            <option value="two">Two Words (Premium)</option>
+                            <option value="tech">Modern Abstract</option>
                         </select>
                         <br><br>
                         <button class="btn btn-ghost" style="width:100%" onclick="Modules.Naming.generate()">Regenerate Set</button>
@@ -330,8 +332,8 @@
         /* --- APP CORE --- */
         const App = {
             init: () => {
-                if(localStorage.getItem('brandZen_v11')) {
-                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v11')));
+                if(localStorage.getItem('brandZen_v12')) {
+                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v12')));
                     document.getElementById('inp-ind').value = State.industry;
                     document.getElementById('inp-key').value = State.keyword;
                     document.getElementById('inp-desc').value = State.desc;
@@ -347,7 +349,7 @@
                 State.keyword = document.getElementById('inp-key').value;
                 State.desc = document.getElementById('inp-desc').value;
                 State.persona = document.getElementById('inp-persona').value;
-                localStorage.setItem('brandZen_v11', JSON.stringify(State));
+                localStorage.setItem('brandZen_v12', JSON.stringify(State));
                 App.route('names');
             },
             route: (id) => {
@@ -370,11 +372,15 @@
         /* --- MODULES --- */
         const Modules = {
             
-            // 1. CONTEXT-AWARE NAMING ENGINE
+            // 1. BLENDED NAMING ENGINE (No long concatenations)
             Naming: {
                 generate: () => {
                     const ind = State.industry;
-                    const key = State.keyword.replace(/[^a-zA-Z]/g, '') || "Core";
+                    // Clean keyword: capitalize first letter, remove spaces/special chars
+                    let cleanKey = State.keyword.replace(/[^a-zA-Z]/g, '');
+                    cleanKey = cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1);
+                    if(!cleanKey) cleanKey = "Core";
+
                     const desc = State.desc.toLowerCase();
                     const type = document.getElementById('inp-nametype').value;
                     const grid = document.getElementById('name-grid');
@@ -386,49 +392,66 @@
                     
                     // Root Dictionaries
                     const roots = {
-                        food: ['Gusto', 'Savor', 'Bite', 'Chef', 'Plate', 'Dish'],
-                        health: ['Vita', 'Pure', 'Nutri', 'Zen', 'Lean', 'Bio', 'Whole'],
-                        tech: ['Sync', 'Node', 'Data', 'Flow', 'Grid', 'Soft'],
-                        speed: ['Dash', 'Snap', 'Go', 'Swift', 'Rapid', 'Zoom']
+                        food: ['Gust', 'Sav', 'Bit', 'Chef', 'Yum', 'Eat'],
+                        health: ['Vita', 'Pure', 'Zen', 'Bio', 'Lean', 'Nutri'],
+                        tech: ['Syn', 'Dat', 'Net', 'Nov', 'Vel', 'Aero'],
+                        fashion: ['Lux', 'Mod', 'Vog', 'Silk', 'Aura', 'Chic']
                     };
                     const suffixes = {
-                        food: ['eats', 'ly', 'bowl', 'box', 'fy'],
-                        tech: ['io', 'ai', 'sys', 'ops', 'lab']
+                        food: ['ea', 'os', 'ix', 'ex', 'o'],
+                        tech: ['io', 'ai', 'sys', 'ly', 'hq']
+                    };
+                    const seconds = {
+                        food: ['Bites', 'Bowl', 'Dish', 'Box', 'Bar'],
+                        tech: ['Labs', 'Hub', 'Base', 'Flow', 'Ops']
                     };
 
-                    // Select Root Sources based on context
                     let activeRoots = [...roots[ind] || roots.tech];
                     if(isHealthy) activeRoots = [...activeRoots, ...roots.health];
-                    if(isFast) activeRoots = [...activeRoots, ...roots.speed];
-                    
-                    let names = [];
 
-                    for(let i=0; i<9; i++) {
+                    const seen = new Set();
+                    let names = [];
+                    let attempts = 0;
+
+                    // Helper: Blend (Portmanteau)
+                    const blend = (w1, w2) => {
+                        // Take 3 chars from w1, and end of w2
+                        const s1 = w1.length > 3 ? w1.substring(0,3) : w1;
+                        return s1 + w2.toLowerCase(); 
+                    }
+
+                    while(names.length < 9 && attempts < 50) {
+                        attempts++;
                         let n = "";
-                        const r1 = activeRoots[Math.floor(Math.random()*activeRoots.length)];
-                        const r2 = activeRoots[Math.floor(Math.random()*activeRoots.length)];
+                        const r = activeRoots[Math.floor(Math.random()*activeRoots.length)];
                         
-                        if(type === 'compound') {
-                            // Two distinct words: "VitaBite", "PureDish"
-                            n = r1 + r2;
+                        if(type === 'two') {
+                            // Two Words: "Urban Spice", "Pure Bites"
+                            const adj = ['Urban', 'Daily', 'True', 'Open', 'Neo', 'Pro'];
+                            const sec = seconds[ind] ? seconds[ind] : seconds.tech;
+                            if(Math.random() > 0.5) n = adj[Math.floor(Math.random()*adj.length)] + " " + cleanKey;
+                            else n = cleanKey + " " + sec[Math.floor(Math.random()*sec.length)];
                         } 
-                        else if (type === 'fused') {
-                            // Root + Suffix: "Nutrify", "Gustoly"
+                        else if (type === 'tech') {
+                            // Abstract: "Novio", "Vitaly"
                             const s = suffixes[ind] ? suffixes[ind][Math.floor(Math.random()*suffixes[ind].length)] : 'ify';
-                            n = r1 + s;
-                        } 
-                        else if (type === 'minimal') {
-                            n = r1; 
+                            n = r + s;
                         }
                         else {
-                            // Smart Mix: Keyword + Context Root
-                            if(i%2==0) n = r1 + key;
-                            else n = key + r2;
+                            // Smart Blend (Portmanteau) - Avoids long names
+                            // e.g. instead of HealthHarvest -> Healvest
+                            if(Math.random() > 0.5) n = blend(cleanKey, r); // Key + Root
+                            else n = blend(r, cleanKey); // Root + Key
+                            
+                            // Cleanup: Capitalize
+                            n = n.charAt(0).toUpperCase() + n.slice(1);
                         }
                         
-                        // Capitalize
-                        n = n.charAt(0).toUpperCase() + n.slice(1);
-                        names.push({ txt: n, type: type === 'smart' ? 'Context Mix' : type });
+                        // Dedupe
+                        if(!seen.has(n) && n.length < 12) {
+                            seen.add(n);
+                            names.push({ txt: n, type: type === 'smart' ? 'Blended' : type });
+                        }
                     }
 
                     names.forEach(obj => {
@@ -444,25 +467,28 @@
                             document.getElementById('domain-preview').innerText = obj.txt.toLowerCase() + '.com available';
                             document.querySelectorAll('.name-chip').forEach(c => c.classList.remove('selected'));
                             el.classList.add('selected');
-                            localStorage.setItem('brandZen_v11', JSON.stringify(State));
+                            localStorage.setItem('brandZen_v12', JSON.stringify(State));
                         };
                         grid.appendChild(el);
                     });
                 }
             },
 
-            // 2. DYNAMIC CANVAS
+            // 2. DYNAMIC CANVAS (Custom Text Insertion)
             Canvas: {
                 generate: () => {
                     const ind = State.industry;
-                    const desc = State.desc || "Solutions";
-                    const persona = State.persona || "Users";
+                    const desc = State.desc || "solutions";
+                    const persona = State.persona || "users";
+                    const key = State.keyword || "product";
                     
-                    // Dynamic string injection
-                    document.getElementById('cnv-prob').innerText = `Current options for "${persona}" are too expensive or lack quality. Users struggle with ${desc.substring(0,20)}...`;
-                    document.getElementById('cnv-sol').innerText = `A unified ${ind === 'tech' ? 'platform' : 'brand'} offering ${State.keyword} with a focus on ${desc.includes('health') ? 'Health & Wellness' : 'Quality & Speed'}.`;
-                    document.getElementById('cnv-uvp').innerText = `The only ${ind} solution that combines ${State.keyword} with specific benefits for ${persona}.`;
-                    document.getElementById('cnv-adv').innerText = ind === 'tech' ? "Proprietary Algorithms & Data." : "Exclusive Supply Chain & Recipe.";
+                    document.getElementById('cnv-prob').innerText = `Existing ${ind} options are too generic. ${persona} find it hard to get "${desc}" without compromising quality.`;
+                    
+                    document.getElementById('cnv-sol').innerText = `A unified ${State.brand || 'Brand'} offering: Premium ${key} specifically tailored for ${persona}.`;
+                    
+                    document.getElementById('cnv-uvp').innerText = `The only ${key} solution that combines speed with the specific requirements of ${persona}.`;
+                    
+                    document.getElementById('cnv-adv').innerText = ind === 'tech' ? "Proprietary Data / First-mover advantage." : "Exclusive Supply Chain / Secret Recipe.";
                 }
             },
 
@@ -472,7 +498,7 @@
                     const input = document.getElementById('comp-name').value.toLowerCase().trim();
                     if(!input) return;
                     
-                    // KNOWLEDGE BASE
+                    // KNOWLEDGE BASE (Common Brands)
                     const kb = {
                         "domino": { name: "Domino's", weak: "Processed ingredients, High calorie count, Generic taste.", gap: "Authentic, Healthy, Gourmet Pizza." },
                         "pizza hut": { name: "Pizza Hut", weak: "Greasy, Heavy dough, Slow innovation.", gap: "Light, Artisan crust, Modern flavors." },
@@ -482,9 +508,16 @@
                         "uber": { name: "Uber", weak: "Surge pricing, Inconsistent driver quality.", gap: "Fixed pricing, Vetted premium drivers." }
                     };
 
-                    let data = kb[Object.keys(kb).find(k => input.includes(k))];
+                    // Fuzzy match
+                    let data = null;
+                    for (const k in kb) {
+                        if (input.includes(k)) {
+                            data = kb[k];
+                            break;
+                        }
+                    }
                     
-                    // Fallback Heuristic if unknown
+                    // Fallback Heuristic
                     if(!data) {
                         const ind = State.industry;
                         const genericWeak = ind === 'food' ? "Inconsistent quality & Unhealthy additives" : "Bloated features & Poor support";
