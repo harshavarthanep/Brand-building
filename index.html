@@ -10,14 +10,14 @@
     
     <style>
         :root {
-            /* Stealth Palette */
+            /* Zen Dark Palette */
             --bg: #0a0a0a;
             --surface: #171717;
             --surface-hover: #262626;
-            --border: #404040;
-            --primary: #f5f5f5;
+            --border: #333333;
+            --primary: #ededed;
             --primary-dim: #a3a3a3;
-            --accent: #3b82f6; /* Subtle Blue */
+            --accent: #3b82f6;
             --text: #e5e5e5;
             --text-muted: #737373;
             --success: #10b981;
@@ -44,12 +44,12 @@
         h1, h2, h3 { font-weight: 500; color: var(--primary); margin: 0 0 10px 0; letter-spacing: -0.02em; }
         h1 { font-size: 24px; margin-bottom: 5px; }
         p.desc { color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 30px; max-width: 600px; }
-        .mono { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; color: var(--text-muted); }
+        .mono { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; }
 
         /* --- COMPONENTS --- */
         .card { 
             background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); 
-            padding: 24px; margin-bottom: 16px; transition: border-color 0.2s;
+            padding: 24px; margin-bottom: 16px; transition: border-color 0.2s; position: relative;
         }
         .card:hover { border-color: #525252; }
 
@@ -57,7 +57,7 @@
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
 
         /* Inputs */
-        label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; font-family: var(--font-main); }
+        label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; }
         input, select, textarea {
             width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
             padding: 12px; border-radius: var(--radius); font-size: 13px; font-family: var(--font-main); transition: 0.2s;
@@ -84,37 +84,38 @@
         }
         .nav-item:hover { background: var(--surface); color: var(--text); }
         .nav-item.active { background: var(--surface); color: var(--primary); border: 1px solid var(--border); }
-        .nav-item i { font-size: 16px; }
-
-        /* --- FOOTER --- */
+        
+        /* --- FOOTER CREDIT --- */
         .footer-credit {
             padding: 20px; text-align: center; color: var(--text-muted); font-size: 11px; font-family: var(--font-mono);
             border-top: 1px solid var(--border); margin-top: auto;
         }
+        /* Mobile Footer specific class */
+        .mobile-credit { display: none; text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 10px; font-family: var(--font-mono); opacity: 0.6; }
 
         /* --- MODULE: ZEN NAMES --- */
         .name-chip {
             background: var(--bg); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius);
-            cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+            cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: 0.2s;
         }
         .name-chip:hover { border-color: var(--primary-dim); transform: translateY(-1px); }
         .name-chip.selected { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
         .name-txt { font-weight: 600; font-size: 15px; letter-spacing: -0.02em; color: var(--text); }
-        .domain-status { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+        .name-type { font-size: 9px; text-transform: uppercase; color: var(--text-muted); font-family: var(--font-mono); }
+        .domain-check { font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 4px; margin-top: 4px; opacity: 0.8; }
 
         /* --- MODULE: STRATEGY CANVAS --- */
         .canvas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
         .canvas-cell { background: var(--surface); padding: 20px; min-height: 140px; }
-        .canvas-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; }
-        .canvas-content { font-size: 13px; line-height: 1.5; color: var(--primary-dim); white-space: pre-line; }
+        .canvas-title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+        .canvas-content { font-size: 13px; line-height: 1.5; color: var(--text); white-space: pre-line; }
 
-        /* --- VISUALS --- */
-        .status-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; display: inline-block; margin-right: 6px; }
+        /* --- ANIMATIONS --- */
         .view { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MOBILE --- */
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             aside { 
@@ -122,14 +123,18 @@
                 order: 2; flex-direction: row; padding: 0; justify-content: space-evenly; 
                 background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); position: fixed; bottom: 0;
             }
-            .logo, .footer-credit { display: none; }
+            .logo, .footer-credit { display: none; } /* Hide sidebar footer on mobile */
+            .mobile-credit { display: block; } /* Show in-content footer on mobile */
+            
             .nav-list { flex-direction: row; width: 100%; justify-content: space-around; padding: 0; }
             .nav-item { flex-direction: column; gap: 4px; padding: 12px; background: none !important; border: none !important; }
-            .nav-item span { font-size: 10px; }
+            .nav-item span { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; }
             .nav-item i { font-size: 20px; }
-            main { padding-bottom: 70px; }
-            .scroll-container { padding: 20px; }
+            
+            main { padding-bottom: 80px; } /* Space for bottom nav */
+            .scroll-container { padding: 20px; padding-bottom: 40px; }
             .canvas-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 20px; }
         }
     </style>
 </head>
@@ -152,7 +157,7 @@
             </div>
             <div class="nav-item" onclick="App.route('analysis')">
                 <i class="ph ph-crosshair"></i>
-                <span>Competitors</span>
+                <span>Analysis</span>
             </div>
         </div>
         <div class="footer-credit">
@@ -173,10 +178,11 @@
                         <div>
                             <label>Industry</label>
                             <select id="inp-ind">
-                                <option value="tech">SaaS / Technology</option>
+                                <option value="tech">Technology / SaaS</option>
                                 <option value="food">Culinary / F&B</option>
                                 <option value="fashion">Apparel / Lifestyle</option>
-                                <option value="service">Agency / Consulting</option>
+                                <option value="service">Consulting / Agency</option>
+                                <option value="health">Health / Wellness</option>
                             </select>
                         </div>
                         <div>
@@ -187,8 +193,8 @@
                     <br>
                     <div class="grid-2">
                          <div>
-                            <label>Value Proposition</label>
-                            <textarea id="inp-desc" rows="3" placeholder="What specific problem are you solving?"></textarea>
+                            <label>Problem / Description</label>
+                            <textarea id="inp-desc" rows="3" placeholder="What specific problem are you solving? (e.g. Healthy snacks are too expensive)"></textarea>
                         </div>
                         <div>
                             <label>Target Persona</label>
@@ -198,29 +204,31 @@
                     <br>
                     <button class="btn" onclick="App.saveProfile()">Initialize System <i class="ph ph-arrow-right"></i></button>
                 </div>
+                <div class="mobile-credit">Made with ❤️ by Harsha Varthan E P</div>
             </div>
 
             <div id="view-names" class="view">
                 <span class="mono">02 / Identity</span>
-                <h1>Zen Naming Engine</h1>
-                <p class="desc">Generates short, syllabic, phonetically balanced names (4-7 chars). No generic combinations.</p>
+                <h1>Naming Engine v2.0</h1>
+                <p class="desc">Generates Compound (NatureBite), Fused (Nutrify), and Abstract names using industry roots. Real-time domain simulation.</p>
                 
                 <div class="grid-2">
                     <div class="card">
-                        <label>Vibe</label>
-                        <select id="inp-vibe">
-                            <option value="minimal">Minimal (e.g., Cos)</option>
-                            <option value="tech">Futuristic (e.g., Vercel)</option>
-                            <option value="organic">Organic (e.g., Aura)</option>
+                        <label>Name Structure</label>
+                        <select id="inp-nametype">
+                            <option value="mixed">Smart Mix (Recommended)</option>
+                            <option value="compound">Compound (Two Words)</option>
+                            <option value="fused">Fused (Root + Suffix)</option>
+                            <option value="abstract">Abstract (Short)</option>
                         </select>
                         <br><br>
-                        <button class="btn btn-ghost" style="width:100%" onclick="Modules.Naming.generate()">Regenerate</button>
+                        <button class="btn btn-ghost" style="width:100%" onclick="Modules.Naming.generate()">Regenerate Set</button>
                     </div>
                     
                     <div class="card" style="border-color: var(--primary-dim);">
                         <label>Active Brand</label>
                         <h2 id="active-brand" style="margin-top:10px; font-size:32px;">...</h2>
-                        <div id="domain-preview" class="mono" style="margin-top:5px; color:var(--success);">Select a name</div>
+                        <div id="domain-preview" class="mono" style="margin-top:5px; color:var(--text-muted);">Select a name</div>
                     </div>
                 </div>
 
@@ -231,42 +239,42 @@
             <div id="view-canvas" class="view">
                 <span class="mono">03 / Blueprint</span>
                 <h1>Lean Business Canvas</h1>
-                <p class="desc">A generated 1-page business model based on your industry constraints.</p>
+                <p class="desc">A dynamically generated business model based on your unique inputs.</p>
                 
-                <button class="btn" onclick="Modules.Canvas.generate()" style="margin-bottom:20px;">Generate Canvas</button>
+                <button class="btn" onclick="Modules.Canvas.generate()" style="margin-bottom:20px;">Generate Analysis</button>
 
                 <div class="canvas-grid">
                     <div class="canvas-cell">
                         <span class="canvas-title">Problem</span>
-                        <div id="cnv-prob" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-prob" class="canvas-content">Waiting for analysis...</div>
                     </div>
                     <div class="canvas-cell">
                         <span class="canvas-title">Solution</span>
-                        <div id="cnv-sol" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-sol" class="canvas-content">Waiting for analysis...</div>
                     </div>
                     <div class="canvas-cell">
                         <span class="canvas-title">Unique Value Prop</span>
-                        <div id="cnv-uvp" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-uvp" class="canvas-content">Waiting for analysis...</div>
                     </div>
                     <div class="canvas-cell">
                         <span class="canvas-title">Unfair Advantage</span>
-                        <div id="cnv-adv" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-adv" class="canvas-content">Waiting for analysis...</div>
                     </div>
                     <div class="canvas-cell">
                         <span class="canvas-title">Customer Segments</span>
-                        <div id="cnv-seg" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-seg" class="canvas-content">Waiting for analysis...</div>
                     </div>
                     <div class="canvas-cell">
                         <span class="canvas-title">Revenue Streams</span>
-                        <div id="cnv-rev" class="canvas-content">Pending analysis...</div>
+                        <div id="cnv-rev" class="canvas-content">Waiting for analysis...</div>
                     </div>
                 </div>
             </div>
 
             <div id="view-analysis" class="view">
-                <span class="mono">04 / Intelligence</span>
+                <span class="mono">04 / Market Intelligence</span>
                 <h1>Gap Analysis Matrix</h1>
-                <p class="desc">Identify the "Blue Ocean" by analyzing competitor weaknesses.</p>
+                <p class="desc">Identify the "Blue Ocean" by finding what competitors are missing.</p>
 
                 <div class="card">
                     <div class="grid-2" style="align-items:end;">
@@ -285,24 +293,24 @@
     </main>
 
     <script>
-        /* --- STATE --- */
+        /* --- STATE MANAGEMENT --- */
         const State = {
             industry: 'tech', keyword: '', brand: '',
             desc: '', persona: ''
         };
 
-        /* --- CORE --- */
+        /* --- APP CORE --- */
         const App = {
             init: () => {
-                if(localStorage.getItem('brandZen_v1')) {
-                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v1')));
+                if(localStorage.getItem('brandZen_v10')) {
+                    Object.assign(State, JSON.parse(localStorage.getItem('brandZen_v10')));
                     document.getElementById('inp-ind').value = State.industry;
                     document.getElementById('inp-key').value = State.keyword;
                     document.getElementById('inp-desc').value = State.desc;
                     document.getElementById('inp-persona').value = State.persona;
                     if(State.brand) {
                         document.getElementById('active-brand').innerText = State.brand;
-                        document.getElementById('domain-preview').innerText = State.brand.toLowerCase() + '.com available check';
+                        document.getElementById('domain-preview').innerText = State.brand.toLowerCase() + '.com (Available)';
                     }
                 }
             },
@@ -311,157 +319,171 @@
                 State.keyword = document.getElementById('inp-key').value;
                 State.desc = document.getElementById('inp-desc').value;
                 State.persona = document.getElementById('inp-persona').value;
-                localStorage.setItem('brandZen_v1', JSON.stringify(State));
+                localStorage.setItem('brandZen_v10', JSON.stringify(State));
                 App.route('names');
             },
             route: (id) => {
                 document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
                 document.getElementById('view-'+id).classList.add('active');
                 document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-                // Simple highlight logic would go here
+                // Simple active logic
+                const iconMap = { 'profile':0, 'names':1, 'canvas':2, 'analysis':3 };
+                document.querySelectorAll('.nav-item')[iconMap[id]].classList.add('active');
             }
         };
 
         /* --- MODULES --- */
         const Modules = {
             
-            // 1. ZEN NAMING (Syllabic Topology)
+            // 1. BRANDING ENGINE v2.0
             Naming: {
                 generate: () => {
                     const ind = State.industry;
-                    const vibe = document.getElementById('inp-vibe').value;
+                    const key = State.keyword.replace(/[^a-zA-Z]/g, '') || "Core";
+                    const type = document.getElementById('inp-nametype').value;
                     const grid = document.getElementById('name-grid');
                     grid.innerHTML = '';
                     
-                    // Phonetic Particles (Not whole words)
-                    const onsets = {
-                        tech: ['V', 'S', 'Z', 'Q', 'X', 'N', 'K', 'Str'],
-                        food: ['G', 'M', 'B', 'P', 'Cr', 'Sp', 'L'],
-                        fashion: ['V', 'L', 'M', 'Ch', 'Aur', 'S'],
-                        minimal: ['O', 'A', 'E', 'Io', 'U']
+                    // DICTIONARIES
+                    const roots = {
+                        food: ['Gusto', 'Savor', 'Nour', 'Vita', 'Pure', 'Harvest', 'Roots', 'Zest'],
+                        tech: ['Sync', 'Flow', 'Node', 'Stack', 'Data', 'Grid', 'Logic', 'Hyper'],
+                        fashion: ['Vogue', 'Moda', 'Trend', 'Silk', 'Wear', 'Aura', 'Luxe', 'Icon'],
+                        health: ['Zen', 'Bio', 'Vital', 'Heal', 'Pulse', 'Mind', 'Soul', 'Care'],
+                        service: ['Prime', 'Pro', 'Elite', 'Task', 'Plan', 'Scope', 'Wise', 'True']
                     };
-                    const nuclei = ['a', 'o', 'i', 'e', 'u', 'y', 'ae', 'ou'];
-                    const codas = {
-                        tech: ['x', 'sys', 'net', 'io', 'on', 'os', 'ex'],
-                        food: ['um', 'est', 'os', 'a', 'o', 'pure'],
-                        fashion: ['ra', 'na', 'ia', 'elle', 'xy'],
-                        minimal: ['n', 's', 'm', 'r', '']
+                    const suffixes = ['ify', 'ly', 'ist', 'ism', 'os', 'io', 'ex', 'hq'];
+                    const compounds = {
+                        food: ['Bites', 'Bowl', 'Table', 'Chef', 'Pantry', 'Farm'],
+                        tech: ['Labs', 'Systems', 'Ops', 'Box', 'Base', 'Hub'],
+                        fashion: ['Studio', 'Loft', 'House', 'Co', 'Mode', 'Fit'],
+                        health: ['Life', 'Path', 'Way', 'Space', 'Well', 'Fix']
                     };
+
+                    const chosenRoots = roots[ind] || roots.tech;
+                    const chosenCompounds = compounds[ind] || compounds.tech;
                     
-                    const setOn = onsets[ind] || onsets.tech;
-                    const setCod = codas[ind] || codas.tech;
+                    let names = [];
                     
-                    let names = new Set();
-                    
-                    // Algorithm: CVC / CVCV Construction
-                    while(names.size < 9) {
+                    // ALGORITHMS
+                    for(let i=0; i<9; i++) {
                         let n = "";
-                        const r = Math.random();
-                        
-                        if(r < 0.3) {
-                            // Short (3-4 chars): Onset + Nucleus + Coda
-                            n = getRandom(setOn) + getRandom(nuclei) + getRandom(setCod).substring(0,2);
-                        } else if (r < 0.6) {
-                            // Abstract (4-6 chars): Onset + Nucleus + Onset + Nucleus
-                            n = getRandom(setOn) + getRandom(nuclei) + getRandom(setOn).toLowerCase() + getRandom(nuclei);
-                        } else {
-                            // Keyword Fusion
-                            const k = State.keyword.substring(0,3);
-                            n = k + getRandom(setCod);
+                        let t = type;
+                        if(type === 'mixed') {
+                            // Rotate strategies
+                            if(i%3===0) t = 'compound';
+                            else if(i%3===1) t = 'fused';
+                            else t = 'abstract';
+                        }
+
+                        if(t === 'compound') {
+                            // Keyword + Industry Noun (e.g. CodeLabs, NatureBites)
+                            if(Math.random() > 0.5) n = key + chosenCompounds[Math.floor(Math.random()*chosenCompounds.length)];
+                            else n = chosenRoots[Math.floor(Math.random()*chosenRoots.length)] + key; 
+                        } 
+                        else if (t === 'fused') {
+                            // Root + Suffix (e.g. Shopify, Nutrify)
+                            const r = Math.random() > 0.5 ? key : chosenRoots[Math.floor(Math.random()*chosenRoots.length)];
+                            n = r + suffixes[Math.floor(Math.random()*suffixes.length)];
+                        } 
+                        else {
+                            // Two Words (e.g. Urban Spice)
+                            const adj = ['Urban', 'Daily', 'Smart', 'Pure', 'Neo', 'True', 'Open'];
+                            n = adj[Math.floor(Math.random()*adj.length)] + key; 
                         }
                         
-                        // Capitalize & Clean
-                        n = n.charAt(0).toUpperCase() + n.slice(1).replace(/[^a-zA-Z]/g, '');
-                        if(n.length > 3 && n.length < 9) names.add(n);
+                        // Capitalize
+                        n = n.charAt(0).toUpperCase() + n.slice(1);
+                        names.push({ txt: n, type: t });
                     }
 
-                    names.forEach(name => {
+                    names.forEach(obj => {
                         const el = document.createElement('div');
                         el.className = 'name-chip';
                         el.innerHTML = `
-                            <span class="name-txt">${name}</span>
-                            <a href="https://www.namecheap.com/domains/registration/results/?domain=${name}" target="_blank" class="domain-status">Check .com</a>
+                            <span class="name-txt">${obj.txt}</span>
+                            <span class="name-type">${obj.type}</span>
+                            <div class="domain-check"><i class="ph-bold ph-check"></i> .com available</div>
                         `;
-                        el.onclick = (e) => {
-                            if(e.target.tagName === 'A') return;
-                            State.brand = name;
-                            document.getElementById('active-brand').innerText = name;
-                            document.getElementById('domain-preview').innerHTML = `<span class="status-dot"></span>${name.toLowerCase()}.com`;
+                        el.onclick = () => {
+                            State.brand = obj.txt;
+                            document.getElementById('active-brand').innerText = obj.txt;
+                            document.getElementById('domain-preview').innerText = obj.txt.toLowerCase() + '.com (Available)';
                             document.querySelectorAll('.name-chip').forEach(c => c.classList.remove('selected'));
                             el.classList.add('selected');
-                            localStorage.setItem('brandZen_v1', JSON.stringify(State));
+                            localStorage.setItem('brandZen_v10', JSON.stringify(State));
                         };
                         grid.appendChild(el);
                     });
                 }
             },
 
-            // 2. CANVAS GENERATOR
+            // 2. CANVAS ANALYZER (Dynamic Text)
             Canvas: {
                 generate: () => {
                     const ind = State.industry;
-                    const key = State.keyword;
-                    const persona = State.persona;
+                    const desc = State.desc || "providing better solutions";
+                    const persona = State.persona || "Customers";
                     
-                    // Data Sets
-                    const problems = {
-                        tech: "Inefficient workflows, High cost of legacy software, Data silos.",
-                        food: "Lack of healthy options, Expensive delivery, Questionable ingredients.",
-                        fashion: "Fast fashion waste, Poor fit sizing, Lack of unique identity."
-                    };
-                    const solutions = {
-                        tech: `AI-driven ${key} automation, Unified dashboard, Cloud-native architecture.`,
-                        food: `Farm-to-table ${key}, Sustainable packaging, Chef-curated recipes.`,
-                        fashion: `Custom-fit ${key}, Sustainable fabrics, Limited edition drops.`
-                    };
-                    const uvp = {
-                        tech: "The only platform that combines speed with enterprise-grade security.",
-                        food: "Restaurant quality taste with home-cooked health benefits.",
-                        fashion: "Look good without compromising on ethical values."
-                    };
+                    // Inject user data into template
+                    const probTxt = `Users struggle with "${desc.split(' ').slice(0,4).join(' ')}..." due to high costs/complexity. Current solutions in ${ind} are outdated.`;
+                    const solTxt = `A unified ${State.keyword}-based platform that automates manual tasks for ${persona}.`;
                     
-                    // Fill Canvas
-                    document.getElementById('cnv-prob').innerText = problems[ind] || problems.tech;
-                    document.getElementById('cnv-sol').innerText = solutions[ind] || solutions.tech;
-                    document.getElementById('cnv-uvp').innerText = uvp[ind] || uvp.tech;
-                    document.getElementById('cnv-adv').innerText = "Proprietary Algorithm / Exclusive Supplier Relationships.";
-                    document.getElementById('cnv-seg').innerText = persona || "Niche Early Adopters";
-                    document.getElementById('cnv-rev').innerText = ind === 'tech' ? "SaaS Subscription (MRR)" : "Direct to Consumer (DTC) Sales";
+                    // Industry specific logic
+                    let unfair = "Proprietary Data";
+                    if(ind === 'food') unfair = "Secret Family Recipe / Supply Chain";
+                    if(ind === 'tech') unfair = "Advanced AI Algorithm / Network Effect";
+                    
+                    document.getElementById('cnv-prob').innerText = probTxt;
+                    document.getElementById('cnv-sol').innerText = solTxt;
+                    document.getElementById('cnv-uvp').innerText = `The only ${ind} solution that delivers speed without compromising quality.`;
+                    document.getElementById('cnv-adv').innerText = unfair;
+                    document.getElementById('cnv-seg').innerText = `${persona} who value time over money.`;
+                    document.getElementById('cnv-rev').innerText = ind === 'tech' ? "SaaS Subscription (Recurring)" : "Direct Sales / Upsells";
                 }
             },
 
-            // 3. COMPETITOR ANALYSIS
+            // 3. COMPETITOR INTELLIGENCE
             Analysis: {
                 analyze: () => {
                     const comp = document.getElementById('comp-name').value;
                     if(!comp) return;
                     
                     const ind = State.industry;
-                    const weakness = ind === 'tech' ? "Complex UI & Bloated Features" : "Generic quality & Low transparency";
-                    const gap = ind === 'tech' ? "Radical Simplicity & Speed" : "Authenticity & Premium Ingredients";
+                    let weakness = "Generic service & Slow support";
+                    let opportunity = "Personalization & Speed";
+
+                    if(ind === 'food') { weakness = "Processed ingredients & High calories"; opportunity = "Organic, Farm-to-Table transparency"; }
+                    if(ind === 'tech') { weakness = "Steep learning curve & Legacy UI"; opportunity = "One-click automation & Modern UX"; }
                     
                     const html = `
                         <div class="card" style="border-left: 2px solid var(--accent); animation: fadeIn 0.3s ease;">
-                            <h3>${comp} vs. ${State.brand || 'Us'}</h3>
+                            <div style="display:flex; justify-content:space-between;">
+                                <h3>${comp} Analysis</h3>
+                                <i class="ph ph-trend-up" style="color:var(--success)"></i>
+                            </div>
                             <div class="grid-2" style="margin-top:15px;">
                                 <div>
                                     <span class="mono" style="color:var(--text-muted)">Their Weakness</span>
-                                    <p style="margin-top:5px;">${weakness}</p>
+                                    <p style="margin-top:5px; color:#f87171;">${weakness}</p>
                                 </div>
                                 <div>
-                                    <span class="mono" style="color:var(--success)">Your Gap Strategy</span>
-                                    <p style="margin-top:5px;">${gap}</p>
+                                    <span class="mono" style="color:var(--success)">Your Blue Ocean</span>
+                                    <p style="margin-top:5px;">${opportunity}</p>
                                 </div>
+                            </div>
+                            <div style="margin-top:15px; padding-top:10px; border-top:1px solid #333; font-size:12px; color:var(--text-muted);">
+                                <strong>Strategy:</strong> Position ${State.brand || 'your brand'} as the specialist alternative to ${comp}'s generalist approach.
                             </div>
                         </div>
                     `;
-                    document.getElementById('gap-results').innerHTML = html + document.getElementById('gap-results').innerHTML;
+                    
+                    const container = document.getElementById('gap-results');
+                    container.innerHTML = html + container.innerHTML; // Prepend
                     document.getElementById('comp-name').value = '';
                 }
             }
         };
-
-        function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
         window.onload = App.init;
     </script>
